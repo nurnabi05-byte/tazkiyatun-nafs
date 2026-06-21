@@ -1,0 +1,2395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tazkiyatun Nafs — Path to Jannah</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+:root {
+  --cream: #f0f9ff;
+  --cream2: #ddf1fc;
+  --gold: #2196c9;
+  --gold-light: #72caf0;
+  --gold-dark: #0e6fa3;
+  --green: #1a7fbf;
+  --green-light: #3aaee0;
+  --green-pale: #cdeefa;
+  --sage: #6cc8eb;
+  --ink: #1a1a2e;
+  --ink2: #2d2d44;
+  --muted: #8b8b9a;
+  --white: #ffffff;
+  --red: #c0392b;
+  --blue: #2980b9;
+  --orange: #e67e22;
+  --border: #b3dff5;
+  --shadow: 0 2px 16px rgba(26,26,46,0.07);
+  --shadow-lg: 0 8px 40px rgba(26,26,46,0.12);
+  --radius: 16px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ──── HEADER ──── */
+.header {
+  background: var(--green);
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+}
+.header-brand { display: flex; align-items: center; gap: 14px; }
+.header-icon { font-size: 28px; }
+.header-title { font-family: 'Amiri', serif; color: var(--gold-light); font-size: 26px; font-weight: 700; }
+.header-sub { color: rgba(255,255,255,0.65); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; }
+.header-arabic { font-family: 'Amiri', serif; color: var(--gold); font-size: 18px; }
+
+/* ──── TABS ──── */
+.tabs-bar {
+  background: var(--white);
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  gap: 0;
+  padding: 0 40px;
+  overflow-x: auto;
+}
+.tab-btn {
+  padding: 16px 28px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--green); }
+.tab-btn.active { color: var(--green); border-bottom-color: var(--gold); font-weight: 600; }
+
+/* ──── MAIN CONTENT ──── */
+.main { max-width: 1400px; margin: 0 auto; padding: 32px 40px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ──── CARDS ──── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+/* ──── SCORECARD ──── */
+.score-hero {
+  background: linear-gradient(135deg, var(--green) 0%, #0a4d7a 100%);
+  border-radius: var(--radius);
+  padding: 32px;
+  color: white;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.score-hero::before {
+  content: '﷽';
+  position: absolute; right: 32px; top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Amiri', serif;
+  font-size: 80px; color: rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+.score-big { font-size: 72px; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--gold-light); line-height: 1; }
+.score-label { font-size: 13px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
+.grade-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: 30px;
+  font-weight: 600; font-size: 16px;
+  margin-top: 12px;
+}
+.grade-excellent { background: rgba(26,127,191,0.3); color: #7adb9e; border: 1px solid rgba(122,219,158,0.3); }
+.grade-good      { background: rgba(41,128,185,0.3); color: #74b9f8; border: 1px solid rgba(116,185,248,0.3); }
+.grade-average   { background: rgba(230,126,34,0.3); color: #ffa35b; border: 1px solid rgba(255,163,91,0.3); }
+.grade-poor      { background: rgba(192,57,43,0.3); color: #ff7b7b; border: 1px solid rgba(255,123,123,0.3); }
+
+/* progress ring */
+.progress-ring-wrap { position: relative; width: 120px; height: 120px; }
+.progress-ring-wrap svg { transform: rotate(-90deg); }
+.progress-ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.progress-ring-pct { font-size: 22px; font-weight: 700; color: var(--gold-light); font-family: 'DM Mono'; }
+.progress-ring-lbl { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+/* date input */
+.date-bar {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 24px; flex-wrap: wrap;
+}
+.date-bar label { font-weight: 600; font-size: 14px; }
+.date-bar input[type=date] {
+  padding: 10px 16px; border: 2px solid var(--border);
+  border-radius: var(--radius-sm); font-family: 'DM Sans'; font-size: 14px;
+  background: var(--white); color: var(--ink); cursor: pointer;
+}
+.date-bar input[type=date]:focus { outline: none; border-color: var(--green); }
+.btn {
+  padding: 10px 24px; border: none; border-radius: var(--radius-sm);
+  font-family: 'DM Sans'; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-primary { background: var(--green); color: white; }
+.btn-primary:hover { background: var(--green-light); }
+.btn-gold { background: var(--gold); color: white; }
+.btn-gold:hover { background: var(--gold-dark); }
+.btn-outline { background: none; border: 2px solid var(--border); color: var(--ink2); }
+.btn-outline:hover { border-color: var(--green); color: var(--green); }
+
+/* domain sections */
+.domain-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  margin: 24px 0 12px;
+  font-weight: 700; font-size: 15px;
+}
+.domain-spiritual { background: linear-gradient(90deg, #e0f4f8, transparent); color: #1a7fbf; border-left: 4px solid #1a7fbf; }
+.domain-physical  { background: linear-gradient(90deg, #fef3e2, transparent); color: #c47d0e; border-left: 4px solid #e6a817; }
+.domain-character { background: linear-gradient(90deg, #eaf0fb, transparent); color: #1a5276; border-left: 4px solid #2980b9; }
+.domain-skills    { background: linear-gradient(90deg, #f4eafc, transparent); color: #6c3483; border-left: 4px solid #8e44ad; }
+
+/* task rows */
+.task-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  background: var(--cream); margin-bottom: 8px;
+  transition: background 0.2s;
+}
+.task-row:hover { background: var(--cream2); }
+.task-label { font-size: 14px; flex: 1; }
+.task-type-badge {
+  font-size: 10px; padding: 2px 8px; border-radius: 20px;
+  font-weight: 600; letter-spacing: 0.5px; margin-right: 12px;
+}
+.badge-tick { background: #cdeefa; color: #0e6fa3; }
+.badge-rating { background: #fef3e2; color: #c47d0e; }
+
+/* checkbox toggle */
+.toggle-wrap { display: flex; align-items: center; gap: 8px; }
+.toggle {
+  width: 48px; height: 26px; border-radius: 13px;
+  background: #ddd; border: none; cursor: pointer;
+  position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.toggle.on { background: #1a7fbf; }
+.toggle::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%; background: white;
+  transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle.on::after { transform: translateX(22px); }
+.toggle-lbl { font-size: 13px; font-weight: 600; color: var(--muted); width: 28px; }
+.toggle.on + .toggle-lbl { color: var(--green); }
+
+/* rating slider */
+.rating-wrap { display: flex; align-items: center; gap: 12px; }
+.rating-slider {
+  -webkit-appearance: none; width: 120px; height: 6px;
+  border-radius: 3px; background: var(--border); outline: none; cursor: pointer;
+}
+.rating-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px;
+  border-radius: 50%; background: var(--gold); cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.rating-val {
+  font-family: 'DM Mono'; font-size: 15px; font-weight: 600;
+  color: var(--gold-dark); width: 24px; text-align: center;
+}
+.stars { color: var(--gold); font-size: 12px; }
+
+/* ──── CHARTS SECTION ──── */
+.chart-wrap { position: relative; height: 280px; }
+.chart-wrap-sm { position: relative; height: 200px; }
+.chart-wrap-lg { position: relative; height: 360px; }
+
+/* ──── KPI STAT ──── */
+.kpi { padding: 20px; }
+.kpi-val { font-size: 36px; font-weight: 700; font-family: 'DM Mono'; color: var(--ink); }
+.kpi-unit { font-size: 16px; color: var(--muted); }
+.kpi-lbl { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.kpi-delta { font-size: 13px; font-weight: 600; margin-top: 6px; }
+.kpi-up { color: var(--green-light); }
+.kpi-down { color: var(--red); }
+
+/* ──── INSIGHT CARDS ──── */
+.insight-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 8px; }
+.insight-card {
+  padding: 16px; border-radius: var(--radius-sm);
+  border-left: 4px solid;
+}
+.insight-card.warn  { background: #fff8ee; border-color: var(--gold); }
+.insight-card.good  { background: #e8f6fd; border-color: var(--green); }
+.insight-card.info  { background: #eef4fb; border-color: var(--blue); }
+.insight-card.alert { background: #fdf0ee; border-color: var(--red); }
+.insight-icon { font-size: 20px; margin-bottom: 6px; }
+.insight-text { font-size: 13px; line-height: 1.6; color: var(--ink2); }
+.insight-text strong { font-weight: 600; }
+
+/* ──── STREAK ──── */
+.streak-box {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px; text-align: center;
+}
+.streak-num { font-size: 56px; font-weight: 700; font-family: 'DM Mono'; }
+.streak-fire { font-size: 40px; }
+
+/* ──── HIGHLIGHT PANELS ──── */
+.highlight-list { list-style: none; }
+.highlight-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.highlight-item:last-child { border-bottom: none; }
+.hi-rank { font-family: 'DM Mono'; font-size: 11px; color: var(--muted); width: 20px; }
+.hi-name { font-size: 13px; flex: 1; }
+.hi-bar-wrap { width: 80px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.hi-bar { height: 100%; border-radius: 3px; }
+.hi-bar-green { background: var(--green); }
+.hi-bar-red   { background: var(--red); }
+.hi-pct { font-family: 'DM Mono'; font-size: 12px; color: var(--muted); width: 40px; text-align: right; }
+
+/* ──── FILTERS BAR ──── */
+.filters-bar {
+  background: var(--white); border-radius: var(--radius);
+  padding: 16px 24px; margin-bottom: 24px;
+  display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
+  box-shadow: var(--shadow); border: 1px solid var(--border);
+}
+.filter-group { display: flex; align-items: center; gap: 8px; }
+.filter-group label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.filter-group select, .filter-group input {
+  padding: 7px 12px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-family: 'DM Sans'; font-size: 13px;
+  background: var(--cream); color: var(--ink); cursor: pointer;
+}
+.filter-group select:focus, .filter-group input:focus { outline: none; border-color: var(--green); }
+.filter-sep { width: 1px; height: 32px; background: var(--border); }
+
+/* ──── DATA TABLE ──── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th {
+  background: var(--cream2); padding: 10px 14px; text-align: left;
+  font-weight: 600; color: var(--muted); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border);
+}
+.data-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.data-table tr:hover td { background: var(--cream); }
+.grade-pill {
+  display: inline-block; padding: 2px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+}
+.pill-excellent { background: #cdeefa; color: #0e6fa3; }
+.pill-good      { background: #d6eaf8; color: #1a5276; }
+.pill-average   { background: #fef9e7; color: #9a7d0a; }
+.pill-poor      { background: #fde8e6; color: #943126; }
+
+/* ──── HEATMAP ──── */
+.heatmap-grid { display: flex; gap: 4px; flex-wrap: wrap; }
+.hm-day {
+  width: 28px; height: 28px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: white; cursor: pointer;
+  position: relative; transition: transform 0.1s;
+}
+.hm-day:hover { transform: scale(1.2); z-index: 10; }
+.hm-empty  { background: var(--border); }
+.hm-excel  { background: var(--green); }
+.hm-good   { background: var(--sage); }
+.hm-avg    { background: var(--gold); }
+.hm-poor   { background: var(--red); opacity: 0.7; }
+.hm-month-label { font-size: 11px; color: var(--muted); margin: 4px 0; font-weight: 600; }
+.hm-tooltip {
+  display: none; position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: white; padding: 6px 10px; border-radius: 6px;
+  font-size: 11px; white-space: nowrap; z-index: 20; pointer-events: none;
+}
+.hm-day:hover .hm-tooltip { display: block; }
+
+/* ──── MINI DOMAIN CHARTS ──── */
+.mini-domain-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.mini-chart-wrap { position: relative; height: 140px; }
+
+/* ──── WEEKLY COMPARISON ──── */
+.week-compare-wrap { position: relative; height: 260px; }
+
+/* ──── RESPONSIVE ──── */
+@media (max-width: 900px) {
+  .main { padding: 16px 16px; }
+  .header { padding: 16px 20px; }
+  .tabs-bar { padding: 0 16px; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .mini-domain-grid { grid-template-columns: 1fr 1fr; }
+  .score-big { font-size: 48px; }
+}
+@media (max-width: 600px) {
+  .header-title { font-size: 20px; }
+  .mini-domain-grid { grid-template-columns: 1fr; }
+}
+
+/* section gaps */
+.section-gap { margin-bottom: 24px; }
+.mt16 { margin-top: 16px; }
+.mt24 { margin-top: 24px; }
+
+/* export btn */
+.export-btn {
+  position: fixed; bottom: 28px; right: 28px; z-index: 200;
+  padding: 12px 20px; background: var(--gold); color: white;
+  border: none; border-radius: 30px; font-family: 'DM Sans';
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(33,150,201,0.4);
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.2s;
+}
+.export-btn:hover { background: var(--gold-dark); transform: translateY(-2px); }
+
+
+
+/* ──── COMMENTS SECTION ──── */
+.comments-section { margin-top: 28px; }
+.comments-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.comment-box {
+  background: var(--white); border-radius: var(--radius);
+  border: 1.5px solid var(--border); padding: 20px 22px;
+  box-shadow: var(--shadow);
+}
+.comment-box-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+}
+.comment-box-icon { font-size: 22px; }
+.comment-box-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+.comment-box-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.comment-textarea {
+  width: 100%; min-height: 120px; resize: vertical;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 12px 14px; font-family: 'DM Sans'; font-size: 14px;
+  color: var(--ink); background: var(--cream); line-height: 1.7;
+  transition: border-color 0.2s; outline: none;
+}
+.comment-textarea:focus { border-color: var(--green); background: var(--white); }
+.comment-textarea::placeholder { color: var(--muted); font-style: italic; }
+.comment-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 10px;
+}
+.comment-char-count { font-size: 11px; color: var(--muted); font-family: 'DM Mono'; }
+.comment-saved-badge {
+  font-size: 11px; font-weight: 600; color: var(--green);
+  opacity: 0; transition: opacity 0.3s;
+}
+.comment-saved-badge.show { opacity: 1; }
+@media (max-width: 700px) {
+  .comments-grid { grid-template-columns: 1fr; }
+}
+
+
+/* ──── WEIGHT TRACKER ──── */
+.weight-panel {
+  background: var(--white); border-radius: var(--radius);
+  border: 1.5px solid var(--border); padding: 20px 24px;
+  margin-bottom: 24px; box-shadow: var(--shadow);
+}
+.weight-title {
+  font-size: 13px; font-weight: 700; letter-spacing: 0.8px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.weight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: stretch; }
+.weight-card {
+  border-radius: var(--radius-sm); padding: 16px 20px;
+  background: var(--cream); border: 1.5px solid var(--border);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.weight-card.input-card { border-color: var(--green); background: var(--green-pale); }
+.weight-card-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+}
+.weight-card.input-card .weight-card-label { color: var(--green-light); }
+.weight-prev-val { font-size: 36px; font-weight: 700; font-family: 'DM Mono'; color: var(--ink); }
+.weight-prev-unit { font-size: 14px; color: var(--muted); margin-left: 4px; }
+.weight-prev-date { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.weight-input-row { display: flex; align-items: center; gap: 10px; }
+.weight-input {
+  width: 110px; padding: 10px 14px; border: 2px solid var(--green);
+  border-radius: var(--radius-sm); font-family: 'DM Mono'; font-size: 22px;
+  font-weight: 700; color: var(--ink); background: var(--white); outline: none;
+}
+.weight-input:focus { border-color: var(--green-light); }
+.weight-unit-select {
+  padding: 10px 10px; border: 2px solid var(--border); border-radius: var(--radius-sm);
+  font-family: 'DM Sans'; font-size: 13px; background: var(--white); cursor: pointer;
+}
+.weight-result-wrap { margin-top: 14px; text-align: center; }
+.weight-delta-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 22px; border-radius: 30px; font-size: 15px;
+  font-weight: 700; font-family: 'DM Mono';
+}
+.wdelta-down  { background: #e6f7ee; color: #1a7a45; border: 1.5px solid #a8ddc0; }
+.wdelta-up    { background: #fdecea; color: #a93226; border: 1.5px solid #f5b7b1; }
+.wdelta-same  { background: var(--cream2); color: var(--muted); border: 1.5px solid var(--border); }
+.weight-points-msg { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.weight-points-msg b { color: var(--ink2); }
+@media (max-width: 700px) {
+  .weight-grid { grid-template-columns: 1fr; }
+}
+
+/* ──── COMPARISON PANEL ──── */
+.compare-panel {
+  background: var(--white); border-radius: var(--radius);
+  border: 1.5px solid var(--border); padding: 20px 24px;
+  margin-bottom: 24px; box-shadow: var(--shadow);
+}
+.compare-title { font-size: 13px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+.date-chip { padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); background: var(--cream); color: var(--ink2); transition: all 0.18s; margin-right:6px; }
+.date-chip.active { background: var(--green); color: white; border-color: var(--green); }
+.date-chip:hover:not(.active) { border-color: var(--green); color: var(--green); }
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom:16px; }
+.compare-card { border-radius: var(--radius-sm); padding: 16px 20px; background: var(--cream); border: 1.5px solid var(--border); }
+.compare-card.current { border-color: var(--green); background: var(--green-pale); }
+.compare-card-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.compare-card.current .compare-card-label { color: var(--green-light); }
+.compare-score-big { font-size: 40px; font-weight: 700; font-family: 'DM Mono'; color: var(--ink); line-height:1; }
+.compare-card.current .compare-score-big { color: var(--green); }
+.compare-score-max { font-size: 13px; color: var(--muted); margin-top:2px; }
+.compare-pct { font-size: 16px; font-weight: 700; font-family: 'DM Mono'; margin-top: 4px; color: var(--ink2); }
+.compare-card.current .compare-pct { color: var(--green); }
+.compare-grade-lbl { font-size: 12px; font-weight: 600; margin-top:4px; }
+.delta-wrap { text-align:center; padding: 10px 0 4px; }
+.delta-badge { display:inline-flex; align-items:center; gap:6px; padding:8px 20px; border-radius:30px; font-size:15px; font-weight:700; font-family:'DM Mono'; }
+.delta-up   { background:#e6f7ee; color:#1a7a45; border:1.5px solid #a8ddc0; }
+.delta-down { background:#fdecea; color:#a93226; border:1.5px solid #f5b7b1; }
+.delta-same { background:var(--cream2); color:var(--muted); border:1.5px solid var(--border); }
+.delta-msg  { font-size:12px; color:var(--muted); margin-top:6px; }
+.compare-domain-section { margin-top:14px; }
+.compare-domain-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.compare-domain-label { font-size:12px; font-weight:600; width:76px; flex-shrink:0; }
+.compare-bar-group { flex:1; display:flex; flex-direction:column; gap:3px; }
+.compare-bar-row { display:flex; align-items:center; gap:6px; }
+.compare-bar-track { flex:1; height:7px; background:var(--border); border-radius:4px; overflow:hidden; }
+.compare-bar-fill  { height:100%; border-radius:4px; transition:width 0.6s ease; }
+.compare-bar-val { font-size:10px; font-family:'DM Mono'; font-weight:600; width:30px; text-align:right; }
+.compare-bar-lbl { font-size:10px; color:var(--muted); width:40px; flex-shrink:0; }
+.task-delta { font-size:11px; font-weight:700; font-family:'DM Mono'; min-width:34px; text-align:center; padding:2px 5px; border-radius:10px; margin-left:6px; flex-shrink:0; }
+.tdelta-up   { background:#e6f7ee; color:#1a7a45; }
+.tdelta-down { background:#fdecea; color:#a93226; }
+.tdelta-same { background:var(--cream2); color:var(--muted); }
+.tdelta-new  { background:#e8f4fd; color:#1a5276; }
+
+/* scroll area for tab 3 task chart */
+.scroll-x { overflow-x: auto; }
+
+/* toast */
+.toast {
+  position: fixed; bottom: 80px; right: 28px; z-index: 300;
+  background: var(--green); color: white; padding: 12px 20px;
+  border-radius: var(--radius-sm); font-size: 14px; font-weight: 600;
+  box-shadow: var(--shadow-lg); opacity: 0; transition: opacity 0.3s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; }
+
+/* ──── PIN LOCK SCREEN ──── */
+#pin-lock-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: linear-gradient(135deg, var(--green) 0%, #0a4d7a 100%);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.pin-card {
+  background: var(--white); border-radius: 20px;
+  padding: 40px 36px; max-width: 380px; width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;
+}
+.pin-icon { font-size: 48px; margin-bottom: 12px; }
+.pin-title { font-family: 'Amiri', serif; font-size: 24px; color: var(--green); font-weight: 700; margin-bottom: 4px; }
+.pin-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.pin-input {
+  width: 100%; padding: 14px; border: 2px solid var(--border);
+  border-radius: 12px; font-family: 'DM Mono'; font-size: 22px;
+  text-align: center; letter-spacing: 8px; outline: none; margin-bottom: 14px;
+}
+.pin-input:focus { border-color: var(--green); }
+.pin-submit {
+  width: 100%; padding: 14px; background: var(--green); color: white;
+  border: none; border-radius: 12px; font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: background 0.2s;
+}
+.pin-submit:hover { background: var(--green-light); }
+.pin-error { color: var(--red); font-size: 12px; margin-top: 10px; min-height: 16px; }
+.pin-hint { font-size: 11px; color: var(--muted); margin-top: 18px; line-height: 1.6; }
+
+/* ──── SYNC STATUS ──── */
+.sync-status {
+  position: fixed; top: 14px; right: 16px; z-index: 150;
+  font-size: 11px; font-weight: 600; padding: 5px 12px;
+  border-radius: 20px; display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.15); color: white;
+  backdrop-filter: blur(4px);
+}
+.sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #f1c40f; }
+.sync-dot.synced { background: #2ecc71; }
+.sync-dot.error { background: #e74c3c; }
+</style>
+</head>
+<body>
+
+<!-- ── PIN LOCK SCREEN ── -->
+<div id="pin-lock-overlay">
+  <div class="pin-card">
+    <div class="pin-icon">🔐</div>
+    <div class="pin-title">Tazkiyatun Nafs</div>
+    <div class="pin-sub">Enter your PIN to access your growth dashboard</div>
+    <input type="password" inputmode="numeric" maxlength="6" class="pin-input" id="pin-input" placeholder="••••••" autocomplete="off">
+    <button class="pin-submit" onclick="checkPin()">Unlock Dashboard</button>
+    <div class="pin-error" id="pin-error"></div>
+    <div class="pin-hint">Your data syncs securely across all your devices using this PIN.</div>
+  </div>
+</div>
+
+<div class="sync-status" id="sync-status">
+  <span class="sync-dot" id="sync-dot"></span>
+  <span id="sync-text">Connecting…</span>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <span class="header-icon">🌙</span>
+    <div>
+      <div class="header-title">Tazkiyatun Nafs</div>
+      <div class="header-sub">Back to Allah — Path to Jannah</div>
+    </div>
+  </div>
+  <div class="header-arabic">الميزان</div>
+</header>
+
+<!-- TABS -->
+<nav class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('t1')">📋 Daily Scorecard</button>
+  <button class="tab-btn" onclick="switchTab('t2')">📈 Performance Overview</button>
+  <button class="tab-btn" onclick="switchTab('t3')">🔍 Task Analysis</button>
+  <button class="tab-btn" onclick="switchTab('t4')">💡 Insights & Growth</button>
+</nav>
+
+<div class="main">
+
+<!-- ═══════════════════════════════════════════ TAB 1 ═══ -->
+<div id="t1" class="tab-panel active">
+
+  <div class="date-bar">
+    <label>📅 Logging for:</label>
+    <input type="date" id="entry-date">
+    <button class="btn btn-primary" onclick="saveEntry()">💾 Save Entry</button>
+    <button class="btn btn-outline" onclick="loadPrevDay()">← Previous</button>
+    <button class="btn btn-outline" onclick="loadNextDay()">Next →</button>
+    <span id="saved-indicator" style="font-size:13px;color:#1a7fbf;display:none;">✅ Saved!</span>
+  </div>
+
+  <!-- Live Score Hero -->
+  <div class="score-hero section-gap">
+    <div>
+      <div class="score-label" id="hero-date-label">TODAY'S SCORE</div>
+      <div class="score-big" id="live-score">0</div>
+      <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-top:4px;">out of <span id="live-max">0</span> points</div>
+      <div id="live-grade-badge" class="grade-badge grade-poor mt16">🔴 Needs Improvement</div>
+    </div>
+    <div style="text-align:center;">
+      <div class="progress-ring-wrap">
+        <svg width="120" height="120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10"/>
+          <circle id="ring-progress" cx="60" cy="60" r="50" fill="none"
+            stroke="#2196c9" stroke-width="10" stroke-linecap="round"
+            stroke-dasharray="314.16" stroke-dashoffset="314.16"
+            style="transition:stroke-dashoffset 0.5s ease"/>
+        </svg>
+        <div class="progress-ring-center">
+          <div class="progress-ring-pct" id="ring-pct">0%</div>
+          <div class="progress-ring-lbl">complete</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON PANEL -->
+  <div class="compare-panel section-gap">
+    <div class="compare-title">
+      <span>📊 Compare with Previous Days</span>
+      <div>
+        <button class="date-chip active" id="chip-1" onclick="setCompareDay(1)">Yesterday</button>
+        <button class="date-chip" id="chip-3" onclick="setCompareDay(3)">3 Days Ago</button>
+        <button class="date-chip" id="chip-7" onclick="setCompareDay(7)">7 Days Ago</button>
+        <button class="date-chip" id="chip-14" onclick="setCompareDay(14)">14 Days Ago</button>
+      </div>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card" id="prev-card">
+        <div class="compare-card-label" id="prev-card-label">Previous Day</div>
+        <div class="compare-score-big" id="prev-score">—</div>
+        <div class="compare-score-max" id="prev-max">No data</div>
+        <div class="compare-pct" id="prev-pct"></div>
+        <div class="compare-grade-lbl" id="prev-grade"></div>
+      </div>
+      <div class="compare-card current">
+        <div class="compare-card-label">Current Day (Selected)</div>
+        <div class="compare-score-big" id="cur-score-cmp">—</div>
+        <div class="compare-score-max" id="cur-max-cmp">No data yet</div>
+        <div class="compare-pct" id="cur-pct-cmp"></div>
+        <div class="compare-grade-lbl" id="cur-grade-cmp"></div>
+      </div>
+    </div>
+    <div class="delta-wrap">
+      <div class="delta-badge delta-same" id="delta-badge">— No data to compare</div>
+    </div>
+    <div id="delta-msg" style="text-align:center;margin-top:8px;font-size:13px;color:var(--muted);"></div>
+    <div class="compare-domain-section" id="compare-domain-bars"></div>
+  </div>
+
+  <!-- ── WEIGHT TRACKER ── -->
+  <div class="weight-panel">
+    <div class="weight-title" style="justify-content:space-between;">
+      <span>⚖️ Today's Weight Tracker</span>
+      <button class="btn btn-outline" style="padding:5px 14px;font-size:11px;" onclick="clearAllWeightHistory()">🗑️ Reset Weight History</button>
+    </div>
+    <div class="weight-grid">
+      <div class="weight-card">
+        <div class="weight-card-label">Previous Recorded Weight</div>
+        <div>
+          <span class="weight-prev-val" id="weight-prev-val">—</span>
+          <span class="weight-prev-unit" id="weight-prev-unit">kg</span>
+        </div>
+        <div class="weight-prev-date" id="weight-prev-date">No previous record yet</div>
+      </div>
+      <div class="weight-card input-card">
+        <div class="weight-card-label">Enter Today's Weight</div>
+        <div class="weight-input-row">
+          <input type="number" step="0.1" class="weight-input" id="weight-input" placeholder="0.0" oninput="onWeightInput()">
+          <select class="weight-unit-select" id="weight-unit" onchange="onWeightInput()">
+            <option value="kg">kg</option>
+            <option value="lb">lb</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="weight-result-wrap" id="weight-result-wrap" style="display:none;">
+      <div class="weight-delta-badge wdelta-same" id="weight-delta-badge">—</div>
+      <div class="weight-points-msg" id="weight-points-msg"></div>
+    </div>
+  </div>
+
+  <!-- SPIRITUAL -->
+  <div class="domain-header domain-spiritual">🕌 Spiritual — Deen</div>
+  <div id="tasks-Spiritual"></div>
+
+  <!-- PHYSICAL -->
+  <div class="domain-header domain-physical">💪 Physical — Siha</div>
+  <div id="tasks-Physical"></div>
+
+  <!-- CHARACTER -->
+  <div class="domain-header domain-character">🤝 Character — Akhlaq</div>
+  <div id="tasks-Character"></div>
+
+  <!-- SKILLS -->
+  <div class="domain-header domain-skills">📚 Skills & Knowledge</div>
+  <div id="tasks-Skills"></div>
+
+
+  <!-- ── DAILY COMMENTS ── -->
+  <div class="comments-section">
+    <!-- Today's Mission — full width on top -->
+    <div class="comment-box" style="margin-bottom:20px;border-left:4px solid var(--gold);">
+      <div class="comment-box-header">
+        <span class="comment-box-icon">🎯</span>
+        <div>
+          <div class="comment-box-title" style="color:var(--gold-dark);">Today's Mission</div>
+          <div class="comment-box-sub">Write your target & mission for today — be specific</div>
+        </div>
+      </div>
+      <textarea
+        class="comment-textarea"
+        id="comment-mission"
+        placeholder="What is your mission for today? Write your specific targets, tasks you must complete, and the most important thing you want to achieve by end of day. Make it clear and actionable."
+        oninput="updateCharCount('mission');autoSaveComment('mission');"
+        style="min-height:100px;border-color:var(--gold);background:#fffdf5;"
+      ></textarea>
+      <div class="comment-footer">
+        <span class="comment-char-count" id="char-mission">0 characters</span>
+        <span class="comment-saved-badge" id="saved-mission">✅ Saved</span>
+      </div>
+    </div>
+
+    <div class="comments-grid">
+
+      <!-- Today's Summary -->
+      <div class="comment-box">
+        <div class="comment-box-header">
+          <span class="comment-box-icon">📝</span>
+          <div>
+            <div class="comment-box-title">Today's Summary</div>
+            <div class="comment-box-sub">Reflect on your day — what went well, what didn't</div>
+          </div>
+        </div>
+        <textarea
+          class="comment-textarea"
+          id="comment-summary"
+          placeholder="Write your daily summary here… What did you accomplish today? How did you feel spiritually and emotionally? Any moments of gratitude?"
+          oninput="updateCharCount('summary');autoSaveComment('summary');"
+        ></textarea>
+        <div class="comment-footer">
+          <span class="comment-char-count" id="char-summary">0 characters</span>
+          <span class="comment-saved-badge" id="saved-summary">✅ Saved</span>
+        </div>
+      </div>
+
+      <!-- Commitment / Reminder -->
+      <div class="comment-box">
+        <div class="comment-box-header">
+          <span class="comment-box-icon">🔔</span>
+          <div>
+            <div class="comment-box-title">Commitment / Reminder</div>
+            <div class="comment-box-sub">Set your intention & reminders for tomorrow</div>
+          </div>
+        </div>
+        <textarea
+          class="comment-textarea"
+          id="comment-commitment"
+          placeholder="Write your commitment or reminder here… What will you do differently tomorrow? Any specific goal, dua, or Sunnah you want to focus on?"
+          oninput="updateCharCount('commitment');autoSaveComment('commitment');"
+        ></textarea>
+        <div class="comment-footer">
+          <span class="comment-char-count" id="char-commitment">0 characters</span>
+          <span class="comment-saved-badge" id="saved-commitment">✅ Saved</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:28px;">
+    <button class="btn btn-primary" onclick="saveEntry()" style="padding:14px 40px;font-size:16px;">
+      💾 Save Today's Entry
+    </button>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════ TAB 2 ═══ -->
+<div id="t2" class="tab-panel">
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <div class="filter-group">
+      <label>From</label>
+      <input type="date" id="f2-from">
+    </div>
+    <div class="filter-group">
+      <label>To</label>
+      <input type="date" id="f2-to">
+    </div>
+    <div class="filter-sep"></div>
+    <div class="filter-group">
+      <label>Day</label>
+      <select id="f2-dow">
+        <option value="">All Days</option>
+        <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+        <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Grade</label>
+      <select id="f2-grade">
+        <option value="">All Grades</option>
+        <option>Excellent</option><option>Good</option><option>Average</option><option>Needs Improvement</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="renderTab2()">Apply</button>
+    <button class="btn btn-outline" onclick="resetFilters2()">Reset</button>
+  </div>
+
+  <!-- KPIs -->
+  <div class="grid-4 section-gap" id="t2-kpis">
+    <div class="card kpi"><div class="card-title">Average Score %</div><div class="kpi-val" id="k-avg">—</div><div class="kpi-lbl">Overall completion</div></div>
+    <div class="card kpi"><div class="card-title">Days Tracked</div><div class="kpi-val" id="k-days">—</div><div class="kpi-lbl">Total entries</div></div>
+    <div class="card kpi"><div class="card-title">Best Day</div><div class="kpi-val" id="k-best">—</div><div class="kpi-lbl" id="k-best-d">—</div></div>
+    <div class="card kpi"><div class="card-title">Week-on-Week</div><div class="kpi-val kpi-delta" id="k-wow">—</div><div class="kpi-lbl">vs previous week</div></div>
+  </div>
+
+  <!-- Line + Bar Charts -->
+  <div class="grid-2 section-gap">
+    <div class="card">
+      <div class="card-title">📈 Daily Completion % Trend</div>
+      <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 Daily Total Score (color-coded)</div>
+      <div class="chart-wrap"><canvas id="barChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Heatmap -->
+  <div class="card section-gap">
+    <div class="card-title">🔥 Performance Heatmap Calendar</div>
+    <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+      <span style="font-size:12px;color:var(--muted);">Intensity:</span>
+      <span style="display:flex;align-items:center;gap:4px;font-size:12px;"><span style="width:14px;height:14px;background:var(--green);border-radius:3px;display:inline-block;"></span>Excellent</span>
+      <span style="display:flex;align-items:center;gap:4px;font-size:12px;"><span style="width:14px;height:14px;background:var(--sage);border-radius:3px;display:inline-block;"></span>Good</span>
+      <span style="display:flex;align-items:center;gap:4px;font-size:12px;"><span style="width:14px;height:14px;background:var(--gold);border-radius:3px;display:inline-block;"></span>Average</span>
+      <span style="display:flex;align-items:center;gap:4px;font-size:12px;"><span style="width:14px;height:14px;background:var(--red);opacity:0.7;border-radius:3px;display:inline-block;"></span>Needs Improvement</span>
+      <span style="display:flex;align-items:center;gap:4px;font-size:12px;"><span style="width:14px;height:14px;background:var(--border);border-radius:3px;display:inline-block;"></span>No data</span>
+    </div>
+    <div id="heatmap-container"></div>
+  </div>
+
+  <!-- Goal Progress -->
+  <div class="grid-2 section-gap">
+    <div class="card">
+      <div class="card-title">🎯 Weekly Goal Progress (≥75%)</div>
+      <div class="chart-wrap"><canvas id="goalChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 Day-by-Day Breakdown</div>
+      <div style="overflow-y:auto;max-height:300px;">
+        <table class="data-table" id="daily-table">
+          <thead><tr><th>Date</th><th>Score</th><th>Max</th><th>%</th><th>Grade</th></tr></thead>
+          <tbody id="daily-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════ TAB 3 ═══ -->
+<div id="t3" class="tab-panel">
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <div class="filter-group">
+      <label>Task Type</label>
+      <select id="f3-type">
+        <option value="">All Tasks</option>
+        <option value="tick">Tick Tasks</option>
+        <option value="rating">Rating Tasks</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Domain</label>
+      <select id="f3-domain">
+        <option value="">All Domains</option>
+        <option>Spiritual</option><option>Physical</option><option>Character</option><option>Skills</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="renderTab3()">Apply</button>
+  </div>
+
+  <!-- Radar + Horizontal Bar -->
+  <div class="grid-2 section-gap">
+    <div class="card">
+      <div class="card-title">🕸️ Domain Performance Radar</div>
+      <div class="chart-wrap"><canvas id="radarChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📦 Rating Task Score Distribution</div>
+      <div class="chart-wrap"><canvas id="boxChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Horizontal task bar -->
+  <div class="card section-gap">
+    <div class="card-title">📊 Average Score Per Task (sorted — bottom = priority improvement)</div>
+    <div class="scroll-x">
+      <div style="min-width:600px;height:500px;position:relative;"><canvas id="hbarChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Weak & Strong panels + Consistency -->
+  <div class="grid-2 section-gap">
+    <div class="card">
+      <div class="card-title">🔴 Top 5 Weak Tasks — Improve These</div>
+      <ul class="highlight-list" id="weak-list"></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">🟢 Top 5 Strength Tasks — Keep Going</div>
+      <ul class="highlight-list" id="strong-list"></ul>
+    </div>
+  </div>
+
+  <div class="card section-gap">
+    <div class="card-title">📉 Task Consistency — Days Completed / Total Days</div>
+    <div class="chart-wrap-lg"><canvas id="consistencyChart"></canvas></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════ TAB 4 ═══ -->
+<div id="t4" class="tab-panel">
+
+  <!-- Streaks & Monthly Summary -->
+  <div class="grid-3 section-gap">
+    <div class="card streak-box">
+      <div class="streak-fire">🔥</div>
+      <div class="streak-num" id="streak-cur">0</div>
+      <div style="font-weight:600;margin-top:4px;">Current Streak</div>
+      <div style="font-size:13px;color:var(--muted);">Days above 75%</div>
+    </div>
+    <div class="card streak-box">
+      <div class="streak-fire">🏆</div>
+      <div class="streak-num" id="streak-best" style="color:var(--gold-dark);">0</div>
+      <div style="font-weight:600;margin-top:4px;">Longest Streak</div>
+      <div style="font-size:13px;color:var(--muted);">Personal best</div>
+    </div>
+    <div class="card" id="monthly-summary-card">
+      <div class="card-title">🎖️ Monthly Summary</div>
+      <div id="monthly-summary-content" style="font-size:14px;line-height:2;"></div>
+    </div>
+  </div>
+
+  <!-- Week-over-week & Correlation -->
+  <div class="grid-2 section-gap">
+    <div class="card">
+      <div class="card-title">📅 Week-over-Week Comparison</div>
+      <div class="week-compare-wrap"><canvas id="wowChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📐 High-Score Day Task Co-occurrence</div>
+      <div class="chart-wrap"><canvas id="corrChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Domain mini trends -->
+  <div class="card section-gap">
+    <div class="card-title">📊 Domain-Wise Score Trends</div>
+    <div class="mini-domain-grid mt16">
+      <div><div style="font-size:12px;font-weight:600;color:#1a7fbf;margin-bottom:6px;">🕌 Spiritual</div><div class="mini-chart-wrap"><canvas id="miniSpiritual"></canvas></div></div>
+      <div><div style="font-size:12px;font-weight:600;color:#c47d0e;margin-bottom:6px;">💪 Physical</div><div class="mini-chart-wrap"><canvas id="miniPhysical"></canvas></div></div>
+      <div><div style="font-size:12px;font-weight:600;color:#1a5276;margin-bottom:6px;">🤝 Character</div><div class="mini-chart-wrap"><canvas id="miniCharacter"></canvas></div></div>
+      <div><div style="font-size:12px;font-weight:600;color:#6c3483;margin-bottom:6px;">📚 Skills</div><div class="mini-chart-wrap"><canvas id="miniSkills"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- Insight cards -->
+  <div class="card section-gap">
+    <div class="card-title">💡 Auto-Generated Insights</div>
+    <div class="insight-grid" id="insight-cards"></div>
+  </div>
+
+</div>
+
+</div><!-- /main -->
+
+<button class="export-btn" onclick="exportCSV()">⬇️ Export CSV</button>
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// FIREBASE CONFIG & CLOUD SYNC
+// ═══════════════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyC750OwSieHCHjH6slz-8mrXy4wBZS_OrU",
+  authDomain: "tazkiyatun-nafs.firebaseapp.com",
+  projectId: "tazkiyatun-nafs",
+  storageBucket: "tazkiyatun-nafs.firebasestorage.app",
+  messagingSenderId: "918766852792",
+  appId: "1:918766852792:web:40e91da7f429a17d08b24d"
+};
+
+let db = null;
+let userDocId = null; // derived from PIN, e.g. "user_497473"
+let appUnlocked = false;
+let cloudReady = false;
+
+function initFirebase() {
+  if (typeof firebase === 'undefined') {
+    console.error('Firebase SDK did not load. This usually happens when opening the HTML file directly from disk (file://) — try hosting it or opening via a local server, or check if an ad-blocker/extension is blocking the gstatic.com scripts.');
+    return false;
+  }
+  try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    return true;
+  } catch (e) {
+    console.error('Firebase init failed:', e.message || e);
+    return false;
+  }
+}
+
+function setSyncStatus(state, text) {
+  const dot = document.getElementById('sync-dot');
+  const txt = document.getElementById('sync-text');
+  if (!dot || !txt) return;
+  dot.className = 'sync-dot' + (state === 'synced' ? ' synced' : state === 'error' ? ' error' : '');
+  txt.textContent = text;
+}
+
+// ── PIN handling ──
+function hashPin(pin) {
+  // Simple deterministic hash → consistent doc id per PIN, no need for real crypto here
+  let hash = 0;
+  for (let i = 0; i < pin.length; i++) {
+    hash = ((hash << 5) - hash + pin.charCodeAt(i)) | 0;
+  }
+  return 'user_' + Math.abs(hash);
+}
+
+function checkPin() {
+  const input = document.getElementById('pin-input');
+  const errorEl = document.getElementById('pin-error');
+  const pin = input.value.trim();
+  if (pin.length < 4) {
+    errorEl.textContent = 'PIN must be at least 4 characters.';
+    return;
+  }
+  userDocId = hashPin(pin);
+  localStorage.setItem('mizan_pin_docid', userDocId);
+  errorEl.textContent = '';
+  unlockApp();
+}
+
+function unlockApp() {
+  appUnlocked = true;
+  document.getElementById('pin-lock-overlay').style.display = 'none';
+  loadFromCloudThenInit();
+}
+
+// ── Cloud sync: push local data to Firestore (debounced per-collection) ──
+let syncTimers = {};
+function debouncedCloudWrite(key, fn, delay=800) {
+  clearTimeout(syncTimers[key]);
+  syncTimers[key] = setTimeout(async () => {
+    if (!db || !userDocId) return;
+    try {
+      setSyncStatus('syncing', 'Syncing…');
+      await fn();
+      setSyncStatus('synced', 'Synced');
+    } catch (e) {
+      console.error('Cloud sync error', e);
+      setSyncStatus('error', 'Sync failed (saved locally)');
+    }
+  }, delay);
+}
+
+function cloudSyncEntries(allEntries) {
+  debouncedCloudWrite('entries', async () => {
+    await db.collection('users').doc(userDocId)
+      .collection('data').doc('entries')
+      .set({ entries: allEntries, updatedAt: Date.now() });
+  });
+}
+
+function cloudSyncComments(date, data) {
+  debouncedCloudWrite('comments_'+date, async () => {
+    await db.collection('users').doc(userDocId)
+      .collection('comments').doc(date)
+      .set({ ...data, updatedAt: Date.now() });
+  });
+}
+
+function cloudSyncWeight(date, data) {
+  debouncedCloudWrite('weight_'+date, async () => {
+    await db.collection('users').doc(userDocId)
+      .collection('weights').doc(date)
+      .set({ ...data, updatedAt: Date.now() });
+  });
+}
+
+// ── Cloud load: pull all data from Firestore into localStorage cache ──
+async function loadFromCloudThenInit() {
+  if (!db || !userDocId) { initAppUI(); return; }
+  setSyncStatus('syncing', 'Loading your data…');
+  try {
+    // Entries
+    const entriesDoc = await db.collection('users').doc(userDocId)
+      .collection('data').doc('entries').get();
+    if (entriesDoc.exists) {
+      const cloudEntries = entriesDoc.data().entries || {};
+      localStorage.setItem('mizan_entries', JSON.stringify(cloudEntries));
+    }
+
+    // Comments (per-day docs)
+    const commentsSnap = await db.collection('users').doc(userDocId).collection('comments').get();
+    commentsSnap.forEach(doc => {
+      localStorage.setItem('mizan_comments_' + doc.id, JSON.stringify(doc.data()));
+    });
+
+    // Weights (per-day docs)
+    const weightsSnap = await db.collection('users').doc(userDocId).collection('weights').get();
+    weightsSnap.forEach(doc => {
+      localStorage.setItem('mizan_weight_' + doc.id, JSON.stringify(doc.data()));
+    });
+
+    cloudReady = true;
+    setSyncStatus('synced', 'Synced');
+  } catch (e) {
+    console.error('Cloud load failed', e);
+    setSyncStatus('error', 'Offline — using local data');
+  }
+  initAppUI();
+}
+
+// ═══════════════════════════════════════════════════════════
+// DATA DEFINITIONS
+// ═══════════════════════════════════════════════════════════
+const TASKS = [
+  { id:'tahajjud', label:'Early Tahajjud', type:'tick', domain:'Spiritual' },
+  { id:'fajr_home', label:'Fajr at Home', type:'tick', domain:'Spiritual' },
+  { id:'fajr_mosque', label:'Fajr at Mosque', type:'tick', domain:'Spiritual' },
+  { id:'namaz_5', label:'5 Wakht Namaz', type:'tick', domain:'Spiritual' },
+  { id:'namaz_mosque', label:'5 Wakht Namaz in Mosque', type:'tick', domain:'Spiritual' },
+  { id:'zikir', label:'Zikir Every Day', type:'rating', domain:'Spiritual' },
+  { id:'hadith', label:'Learn New Hadith & Practice', type:'tick', domain:'Spiritual' },
+  { id:'quran', label:'Read Quran (10 min)', type:'tick', domain:'Spiritual' },
+  { id:'arabic', label:'Learn 1 Arabic Word', type:'tick', domain:'Spiritual' },
+  { id:'sunnah_daily', label:'Learn New Sunnah Daily', type:'tick', domain:'Spiritual' },
+  { id:'surah_waqiah', label:'Surah Waqiah Before Sleep', type:'tick', domain:'Spiritual' },
+  { id:'surah_mulk', label:'Surah Mulk Before Sleep', type:'tick', domain:'Spiritual' },
+  { id:'dua_sleep', label:'Dua Before Sleep', type:'tick', domain:'Spiritual' },
+  { id:'dua_morning', label:'Dua Morning & Evening', type:'tick', domain:'Spiritual' },
+  { id:'ayatul_kursi', label:'Ayatul Kursi After Every Prayer', type:'tick', domain:'Spiritual' },
+  { id:'meswak_wudu', label:'Meswak Before Wudu', type:'rating', domain:'Spiritual' },
+  { id:'dua_after_wudu', label:'Dua After Every Wudu', type:'rating', domain:'Spiritual' },
+  { id:'dua_after_salah', label:'Dua After Every Salah', type:'rating', domain:'Spiritual' },
+  { id:'belief_allah', label:'Belive in Allah(He Arranges Everything)', type:'rating', domain:'Spiritual' },
+  { id:'death_reminder', label:'Remembering Death & Accountability', type:'rating', domain:'Spiritual' },
+  { id:'workout', label:'Morning Workout (15 min)', type:'tick', domain:'Physical' },
+  { id:'kalojeera', label:'Morning Kalojeera', type:'tick', domain:'Physical' },
+  { id:'eating_sunnah', label:"Eat with Prophet's Sunnah", type:'tick', domain:'Physical' },
+  { id:'mobile_less', label:'Mobile Scrolling Less Than Previous Day', type:'tick', domain:'Physical' },
+  { id:'no_hygiene_food', label:'No to Unhygienic Food', type:'rating', domain:'Physical' },
+  { id:'office_perf', label:'In-Office Overall Performance', type:'rating', domain:'Character' },
+  { id:'good_behavior', label:'Good Behavior with Everyone', type:'rating', domain:'Character' },
+  { id:'patience', label:'Patience & Humility', type:'rating', domain:'Character' },
+  { id:'forgive', label:'Forgive Everyone', type:'tick', domain:'Character' },
+  { id:'family_time', label:'Quality Family Time', type:'rating', domain:'Character' },
+  { id:'family_contact', label:'Contact with Family Members', type:'rating', domain:'Character' },
+  { id:'charity', label:'Charity (Sadaqah)', type:'rating', domain:'Character' },
+  { id:'war_nafs', label:'War with Nafs (Self-Control)', type:'rating', domain:'Character' },
+  { id:'mankind_to_animal', label:'Kindness to Mankind & Animals', type:'rating', domain:'Character' },
+  { id:'good_deeds', label:'Good Deeds (Amal Saleh)', type:'rating', domain:'Character' },
+  { id:'python_skills', label:'Learn Python/New Skills (30 min)', type:'tick', domain:'Skills' },
+  { id:'gen_knowledge', label:'Learn General Knowledge (10 min)', type:'tick', domain:'Skills' },
+  { id:'daily_goals', label:'Set & Visualize Daily Goals', type:'tick', domain:'Skills' },
+  { id:'mission_score', label:'Today\'s Mission Achievement', type:'rating', domain:'Skills' },
+];
+
+const MAX_POSSIBLE = TASKS.reduce((s,t) => s + (t.type==='tick'?1:5), 0);
+const DOMAINS = ['Spiritual','Physical','Character','Skills'];
+const DOMAIN_COLORS = { Spiritual:'#1a7fbf', Physical:'#c47d0e', Character:'#2980b9', Skills:'#8e44ad' };
+
+// ═══════════════════════════════════════════════════════════
+// STORAGE — Firestore-backed with localStorage cache
+// ═══════════════════════════════════════════════════════════
+// All reads happen instantly from a local in-memory/localStorage cache.
+// Every write updates the cache immediately AND pushes to Firestore in
+// the background, so other devices see it next time they load.
+
+function getAllEntries() {
+  try { return JSON.parse(localStorage.getItem('mizan_entries') || '{}'); } catch { return {}; }
+}
+function saveAllEntries(data) {
+  localStorage.setItem('mizan_entries', JSON.stringify(data));
+  cloudSyncEntries(data);
+}
+function getEntry(date) { return getAllEntries()[date] || {}; }
+function setEntry(date, data) {
+  const all = getAllEntries(); all[date] = data; saveAllEntries(all);
+}
+
+// ═══════════════════════════════════════════════════════════
+// SCORING
+// ═══════════════════════════════════════════════════════════
+function scoreEntry(entry) {
+  let score = 0, max = 0;
+  TASKS.forEach(t => {
+    const maxT = t.type==='tick'?1:5;
+    const val = entry[t.id] ?? 0;
+    score += Number(val); max += maxT;
+  });
+  return { score, max, pct: max>0 ? Math.round(score/max*100) : 0 };
+}
+function getGrade(pct) {
+  if (pct >= 90) return 'Excellent';
+  if (pct >= 75) return 'Good';
+  if (pct >= 60) return 'Average';
+  return 'Needs Improvement';
+}
+function gradeClass(grade) {
+  return { Excellent:'excellent', Good:'good', Average:'average', 'Needs Improvement':'poor' }[grade] || 'poor';
+}
+function gradePill(grade) {
+  const map = { Excellent:'pill-excellent', Good:'pill-good', Average:'pill-average', 'Needs Improvement':'pill-poor' };
+  return `<span class="grade-pill ${map[grade]||'pill-poor'}">${grade}</span>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════════════════════
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = ['t1','t2','t3','t4'].indexOf(id);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  if (id==='t2') renderTab2();
+  if (id==='t3') renderTab3();
+  if (id==='t4') renderTab4();
+}
+
+// ═══════════════════════════════════════════════════════════
+// TAB 1 — SCORECARD
+// ═══════════════════════════════════════════════════════════
+let currentDate = '';
+
+function todayStr() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function buildTaskForms() {
+  DOMAINS.forEach(domain => {
+    const tasks = TASKS.filter(t => t.domain === domain);
+    const container = document.getElementById(`tasks-${domain}`);
+    container.innerHTML = '';
+    tasks.forEach(task => {
+      const row = document.createElement('div');
+      row.className = 'task-row';
+      const badge = `<span class="task-type-badge ${task.type==='tick'?'badge-tick':'badge-rating'}">${task.type==='tick'?'✓ TICK':'★ RATE'}</span>`;
+      if (task.type === 'tick') {
+        row.innerHTML = `
+          <span class="task-label">${task.label}</span>
+          ${badge}
+          <div class="toggle-wrap">
+            <span id="delta-${task.id}" class="task-delta tdelta-same" style="display:none"></span>
+            <button class="toggle" id="toggle-${task.id}" onclick="tickToggle('${task.id}')"></button>
+            <span class="toggle-lbl" id="lbl-${task.id}">No</span>
+          </div>`;
+      } else {
+        row.innerHTML = `
+          <span class="task-label">${task.label}</span>
+          ${badge}
+          <div class="rating-wrap">
+            <span id="delta-${task.id}" class="task-delta tdelta-same" style="display:none"></span>
+            <input type="range" class="rating-slider" id="slider-${task.id}" min="0" max="5" value="0"
+              oninput="ratingChange('${task.id}', this.value)">
+            <span class="rating-val" id="rval-${task.id}">0</span>
+            <span class="stars" id="rstars-${task.id}">☆☆☆☆☆</span>
+          </div>`;
+      }
+      container.appendChild(row);
+    });
+  });
+}
+
+function tickToggle(id) {
+  const btn = document.getElementById(`toggle-${id}`);
+  const lbl = document.getElementById(`lbl-${id}`);
+  const isOn = btn.classList.toggle('on');
+  lbl.textContent = isOn ? 'Yes' : 'No';
+  updateLiveScore();
+}
+
+function ratingChange(id, val) {
+  document.getElementById(`rval-${id}`).textContent = val;
+  const stars = '★'.repeat(val) + '☆'.repeat(5-val);
+  document.getElementById(`rstars-${id}`).textContent = stars;
+  updateLiveScore();
+}
+
+function getCurrentFormValues() {
+  const values = {};
+  TASKS.forEach(t => {
+    if (t.type === 'tick') {
+      values[t.id] = document.getElementById(`toggle-${t.id}`)?.classList.contains('on') ? 1 : 0;
+    } else {
+      values[t.id] = parseInt(document.getElementById(`slider-${t.id}`)?.value || 0);
+    }
+  });
+  return values;
+}
+
+function setFormValues(entry) {
+  TASKS.forEach(t => {
+    const val = entry[t.id] ?? 0;
+    if (t.type === 'tick') {
+      const btn = document.getElementById(`toggle-${t.id}`);
+      const lbl = document.getElementById(`lbl-${t.id}`);
+      if (btn) {
+        btn.classList.toggle('on', !!val);
+        lbl.textContent = val ? 'Yes' : 'No';
+      }
+    } else {
+      const sl = document.getElementById(`slider-${t.id}`);
+      if (sl) {
+        sl.value = val;
+        ratingChange(t.id, val);
+      }
+    }
+  });
+}
+
+function updateLiveScore() {
+  const values = getCurrentFormValues();
+  const { score: baseScore, max, pct: basePct } = scoreEntry(values);
+  const date = document.getElementById('entry-date')?.value || todayStr();
+  const weightAdj = (typeof getWeightScoreAdjustment === 'function') ? getWeightScoreAdjustment(date) : 0;
+  const score = Math.max(0, baseScore + weightAdj);
+  const pct = max > 0 ? Math.round(score / max * 100) : 0;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('live-max').textContent = max;
+  document.getElementById('ring-pct').textContent = pct + '%';
+  const circumference = 314.16;
+  const offset = circumference - (pct / 100) * circumference;
+  document.getElementById('ring-progress').style.strokeDashoffset = offset;
+  const grade = getGrade(pct);
+  const gc = gradeClass(grade);
+  const icons = { excellent:'🟢', good:'🔵', average:'🟡', poor:'🔴' };
+  const badge = document.getElementById('live-grade-badge');
+  badge.textContent = `${icons[gc]||'🔴'} ${grade}`;
+  badge.className = `grade-badge grade-${gc} mt16`;
+  // sync current card in comparison panel
+  const curMax2 = document.getElementById('cur-max-cmp');
+  if (curMax2) {
+    document.getElementById('cur-score-cmp').textContent = score;
+    document.getElementById('cur-max-cmp').textContent = 'out of ' + max + ' points';
+    document.getElementById('cur-pct-cmp').textContent = pct + '%';
+    document.getElementById('cur-grade-cmp').textContent = gradeEmoji(getGrade(pct)) + ' ' + getGrade(pct);
+  }
+}
+
+function saveEntry() {
+  const date = document.getElementById('entry-date').value;
+  if (!date) { showToast('Please select a date first'); return; }
+  setEntry(date, getCurrentFormValues());
+  saveComments(date);
+  onWeightInput();
+  const ind = document.getElementById('saved-indicator');
+  ind.style.display = 'inline';
+  showToast('✅ Entry saved for ' + date);
+  setTimeout(() => ind.style.display='none', 2000);
+}
+
+function loadEntry(date) {
+  currentDate = date;
+  const entry = getEntry(date);
+  setFormValues(entry);
+  loadWeightUI(date);
+  updateLiveScore();
+  renderComparison();
+  loadComments(date);
+  // Update hero label
+  const lbl = document.getElementById('hero-date-label');
+  if (lbl) lbl.textContent = date === todayStr() ? "TODAY'S SCORE" : date + " — SCORE";
+}
+
+function loadPrevDay() {
+  const d = new Date(document.getElementById('entry-date').value || todayStr());
+  d.setDate(d.getDate()-1);
+  const str = d.toISOString().slice(0,10);
+  document.getElementById('entry-date').value = str;
+  loadEntry(str);
+}
+function loadNextDay() {
+  const d = new Date(document.getElementById('entry-date').value || todayStr());
+  d.setDate(d.getDate()+1);
+  const str = d.toISOString().slice(0,10);
+  document.getElementById('entry-date').value = str;
+  loadEntry(str);
+}
+
+// ═══════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ═══════════════════════════════════════════════════════════
+// CHART INSTANCES (keep refs for destroy/rebuild)
+// ═══════════════════════════════════════════════════════════
+const charts = {};
+
+function destroyChart(id) {
+  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+function getFilteredEntries(fromSel, toSel, dowSel, gradeSel) {
+  const all = getAllEntries();
+  const DOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  return Object.entries(all)
+    .filter(([date, entry]) => {
+      if (fromSel && date < fromSel) return false;
+      if (toSel && date > toSel) return false;
+      if (dowSel) {
+        const d = new Date(date + 'T00:00:00');
+        if (DOW[d.getDay()] !== dowSel) return false;
+      }
+      if (gradeSel) {
+        const { pct } = scoreEntry(entry);
+        if (getGrade(pct) !== gradeSel) return false;
+      }
+      return true;
+    })
+    .sort((a,b) => a[0].localeCompare(b[0]));
+}
+
+// ═══════════════════════════════════════════════════════════
+// TAB 2
+// ═══════════════════════════════════════════════════════════
+function resetFilters2() {
+  document.getElementById('f2-from').value='';
+  document.getElementById('f2-to').value='';
+  document.getElementById('f2-dow').value='';
+  document.getElementById('f2-grade').value='';
+  renderTab2();
+}
+
+function renderTab2() {
+  const from = document.getElementById('f2-from').value;
+  const to   = document.getElementById('f2-to').value;
+  const dow  = document.getElementById('f2-dow').value;
+  const grade = document.getElementById('f2-grade').value;
+  const rows = getFilteredEntries(from, to, dow, grade);
+
+  if (!rows.length) {
+    ['lineChart','barChart','goalChart'].forEach(id => destroyChart(id));
+    document.getElementById('daily-tbody').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px;">No data yet. Start logging in the Daily Scorecard tab!</td></tr>';
+    document.getElementById('k-avg').textContent='—';
+    document.getElementById('k-days').textContent='0';
+    document.getElementById('k-best').textContent='—';
+    document.getElementById('k-wow').textContent='—';
+    document.getElementById('heatmap-container').innerHTML='<p style="color:var(--muted);font-size:14px;">No data yet.</p>';
+    return;
+  }
+
+  const labels = rows.map(r => r[0]);
+  const pcts   = rows.map(r => scoreEntry(r[1]).pct);
+  const scores = rows.map(r => scoreEntry(r[1]).score);
+  const grades = rows.map(r => getGrade(scoreEntry(r[1]).pct));
+
+  // KPIs
+  const avgPct = Math.round(pcts.reduce((s,v)=>s+v,0)/pcts.length);
+  document.getElementById('k-avg').textContent = avgPct + '%';
+  document.getElementById('k-days').textContent = rows.length;
+  const maxIdx = pcts.indexOf(Math.max(...pcts));
+  document.getElementById('k-best').textContent = Math.max(...pcts)+'%';
+  document.getElementById('k-best-d').textContent = labels[maxIdx];
+  // WoW
+  if (rows.length >= 7) {
+    const thisWeek = pcts.slice(-7).reduce((s,v)=>s+v,0)/7;
+    const prevWeek = pcts.length>=14 ? pcts.slice(-14,-7).reduce((s,v)=>s+v,0)/7 : null;
+    if (prevWeek !== null) {
+      const diff = Math.round(thisWeek - prevWeek);
+      document.getElementById('k-wow').textContent = (diff>=0?'+':'')+diff+'%';
+      document.getElementById('k-wow').className = 'kpi-val kpi-delta '+(diff>=0?'kpi-up':'kpi-down');
+    } else { document.getElementById('k-wow').textContent='N/A'; }
+  } else { document.getElementById('k-wow').textContent='N/A'; }
+
+  // Grade colors
+  const bgColors = grades.map(g => {
+    if (g==='Excellent') return 'rgba(26,127,191,0.8)';
+    if (g==='Good') return 'rgba(41,128,185,0.8)';
+    if (g==='Average') return 'rgba(230,126,34,0.8)';
+    return 'rgba(192,57,43,0.7)';
+  });
+
+  // Line chart
+  destroyChart('lineChart');
+  charts.lineChart = new Chart(document.getElementById('lineChart').getContext('2d'), {
+    type:'line',
+    data:{ labels, datasets:[{
+      label:'Completion %', data:pcts,
+      borderColor:'#2196c9', backgroundColor:'rgba(33,150,201,0.1)',
+      borderWidth:2.5, pointRadius:4, pointBackgroundColor:'#2196c9',
+      fill:true, tension:0.4
+    },{
+      label:'Target (75%)', data:labels.map(()=>75),
+      borderColor:'rgba(46,107,79,0.4)', borderDash:[6,4], borderWidth:1.5,
+      pointRadius:0, fill:false
+    }]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{font:{family:'DM Sans',size:12}}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y+'%'}}}, scales:{ y:{ min:0, max:100, grid:{color:'rgba(0,0,0,0.05)'}, ticks:{callback:v=>v+'%',font:{family:'DM Sans'}}}, x:{ grid:{display:false}, ticks:{font:{family:'DM Sans',size:11},maxRotation:45} } } }
+  });
+
+  // Bar chart
+  destroyChart('barChart');
+  charts.barChart = new Chart(document.getElementById('barChart').getContext('2d'), {
+    type:'bar',
+    data:{ labels, datasets:[{ label:'Daily Score', data:scores, backgroundColor:bgColors, borderRadius:6 }]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ beginAtZero:true, grid:{color:'rgba(0,0,0,0.05)'}, ticks:{font:{family:'DM Sans'}} }, x:{ grid:{display:false}, ticks:{font:{family:'DM Sans',size:11},maxRotation:45} } } }
+  });
+
+  // Goal chart (days hitting 75%+)
+  const weeksMap = {};
+  rows.forEach(([date, entry]) => {
+    const d = new Date(date+'T00:00:00');
+    const yr = d.getFullYear();
+    const wn = getWeekNumber(d);
+    const key = `W${wn}/${yr}`;
+    if (!weeksMap[key]) weeksMap[key] = { hit:0, total:0 };
+    weeksMap[key].total++;
+    if (scoreEntry(entry).pct >= 75) weeksMap[key].hit++;
+  });
+  const wLabels = Object.keys(weeksMap);
+  const wHit = wLabels.map(k => weeksMap[k].hit);
+  const wTot = wLabels.map(k => weeksMap[k].total);
+  destroyChart('goalChart');
+  charts.goalChart = new Chart(document.getElementById('goalChart').getContext('2d'), {
+    type:'bar',
+    data:{ labels:wLabels, datasets:[
+      { label:'Days ≥75%', data:wHit, backgroundColor:'rgba(26,127,191,0.8)', borderRadius:5 },
+      { label:'Total Days', data:wTot, backgroundColor:'rgba(0,0,0,0.1)', borderRadius:5 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{font:{family:'DM Sans'}}}}, scales:{ y:{beginAtZero:true,ticks:{font:{family:'DM Sans'},stepSize:1}}, x:{grid:{display:false},ticks:{font:{family:'DM Sans',size:11}}} } }
+  });
+
+  // Table
+  const tbody = document.getElementById('daily-tbody');
+  tbody.innerHTML = rows.slice().reverse().map(([date, entry]) => {
+    const { score, max, pct } = scoreEntry(entry);
+    const g = getGrade(pct);
+    return `<tr><td>${date}</td><td style="font-family:DM Mono">${score}</td><td style="font-family:DM Mono">${max}</td><td style="font-family:DM Mono">${pct}%</td><td>${gradePill(g)}</td></tr>`;
+  }).join('');
+
+  // Heatmap
+  renderHeatmap(rows);
+}
+
+function renderHeatmap(rows) {
+  const dataMap = {};
+  rows.forEach(([date, entry]) => { dataMap[date] = scoreEntry(entry).pct; });
+
+  const all = getAllEntries();
+  const dates = Object.keys(all).sort();
+  if (!dates.length) { document.getElementById('heatmap-container').innerHTML='<p style="color:var(--muted);">No data yet.</p>'; return; }
+
+  const firstDate = new Date(dates[0]+'T00:00:00');
+  const lastDate = new Date(dates[dates.length-1]+'T00:00:00');
+  // Build month groups
+  const months = [];
+  let cur = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
+  const end = new Date(lastDate.getFullYear(), lastDate.getMonth()+1, 1);
+  while (cur < end) {
+    months.push({ year:cur.getFullYear(), month:cur.getMonth() });
+    cur.setMonth(cur.getMonth()+1);
+  }
+
+  const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let html = '';
+  months.forEach(({ year, month }) => {
+    html += `<div style="margin-bottom:20px;"><div class="hm-month-label">${MONTH_NAMES[month]} ${year}</div><div class="heatmap-grid">`;
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const firstDow = new Date(year, month, 1).getDay();
+    for (let i=0;i<firstDow;i++) html += `<div style="width:28px;height:28px;"></div>`;
+    for (let d=1; d<=daysInMonth; d++) {
+      const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const pct = dataMap[dateStr];
+      let cls = 'hm-empty'; let grade = '';
+      if (pct !== undefined) {
+        grade = getGrade(pct);
+        cls = grade==='Excellent'?'hm-excel':grade==='Good'?'hm-good':grade==='Average'?'hm-avg':'hm-poor';
+      }
+      html += `<div class="hm-day ${cls}" title="${dateStr}${pct!==undefined?' ('+pct+'%)':''}">
+        <div class="hm-tooltip">${dateStr}${pct!==undefined?': '+pct+'%':' — no data'}</div>
+      </div>`;
+    }
+    html += '</div></div>';
+  });
+  document.getElementById('heatmap-container').innerHTML = html;
+}
+
+function getWeekNumber(d) {
+  const onejan = new Date(d.getFullYear(), 0, 1);
+  return Math.ceil((((d - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+}
+
+// ═══════════════════════════════════════════════════════════
+// TAB 3
+// ═══════════════════════════════════════════════════════════
+function renderTab3() {
+  const typeF = document.getElementById('f3-type').value;
+  const domF  = document.getElementById('f3-domain').value;
+  const all = getAllEntries();
+  const rows = Object.entries(all).sort((a,b)=>a[0].localeCompare(b[0]));
+
+  if (!rows.length) {
+    document.getElementById('weak-list').innerHTML='<li style="color:var(--muted);padding:16px;">No data yet.</li>';
+    document.getElementById('strong-list').innerHTML='<li style="color:var(--muted);padding:16px;">No data yet.</li>';
+    return;
+  }
+
+  // Filter tasks
+  let filtTasks = TASKS;
+  if (typeF) filtTasks = filtTasks.filter(t=>t.type===typeF);
+  if (domF)  filtTasks = filtTasks.filter(t=>t.domain===domF);
+
+  // Task averages (as % of max)
+  const taskStats = filtTasks.map(t => {
+    const vals = rows.map(r => Number(r[1][t.id]||0));
+    const avg = vals.reduce((s,v)=>s+v,0)/vals.length;
+    const maxT = t.type==='tick'?1:5;
+    const pct = Math.round(avg/maxT*100);
+    const consistency = vals.filter(v=>v>0).length;
+    return { ...t, avg, pct, consistency, total:rows.length };
+  });
+
+  taskStats.sort((a,b)=>a.pct-b.pct);
+
+  // Horizontal bar
+  destroyChart('hbarChart');
+  const barColors = taskStats.map(t => DOMAIN_COLORS[t.domain]+'cc');
+  charts.hbarChart = new Chart(document.getElementById('hbarChart').getContext('2d'), {
+    type:'bar',
+    data:{ labels:taskStats.map(t=>t.label), datasets:[{ label:'Avg %', data:taskStats.map(t=>t.pct), backgroundColor:barColors, borderRadius:4 }]},
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.x+'%'}}}, scales:{ x:{min:0,max:100,ticks:{callback:v=>v+'%',font:{family:'DM Sans'}}}, y:{grid:{display:false},ticks:{font:{family:'DM Sans',size:12}}} } }
+  });
+
+  // Radar
+  const domScores = DOMAINS.map(dom => {
+    const domTasks = TASKS.filter(t=>t.domain===dom);
+    const domMax = domTasks.reduce((s,t)=>s+(t.type==='tick'?1:5),0)*rows.length;
+    const domScore = domTasks.reduce((s,t) => s+rows.reduce((ss,r)=>ss+Number(r[1][t.id]||0),0),0);
+    return domMax>0 ? Math.round(domScore/domMax*100) : 0;
+  });
+  destroyChart('radarChart');
+  charts.radarChart = new Chart(document.getElementById('radarChart').getContext('2d'), {
+    type:'radar',
+    data:{ labels:DOMAINS, datasets:[{
+      label:'Domain Score %', data:domScores,
+      backgroundColor:'rgba(26,127,191,0.2)', borderColor:'#1a7fbf',
+      pointBackgroundColor:'#2196c9', pointRadius:6, borderWidth:2
+    }]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      scales:{ r:{ min:0, max:100, ticks:{stepSize:25,callback:v=>v+'%',font:{family:'DM Mono',size:10}}, pointLabels:{font:{family:'DM Sans',size:12}}, grid:{color:'rgba(0,0,0,0.08)'} } },
+      plugins:{legend:{display:false}}
+    }
+  });
+
+  // Box/distribution chart for rating tasks
+  const ratingTasks = TASKS.filter(t=>t.type==='rating');
+  const boxLabels = ratingTasks.map(t=>t.label.substring(0,20)+'…');
+  const boxDatasets = ratingTasks.map((t, i) => {
+    const vals = rows.map(r=>Number(r[1][t.id]||0));
+    return vals;
+  });
+  // Represent as min/avg/max bars
+  const boxAvgs = ratingTasks.map((t,i) => {
+    const vals = rows.map(r=>Number(r[1][t.id]||0));
+    return { avg:vals.reduce((s,v)=>s+v,0)/vals.length, min:Math.min(...vals), max:Math.max(...vals) };
+  });
+  destroyChart('boxChart');
+  charts.boxChart = new Chart(document.getElementById('boxChart').getContext('2d'), {
+    type:'bar',
+    data:{ labels:boxLabels, datasets:[
+      { label:'Max', data:boxAvgs.map(b=>b.max), backgroundColor:'rgba(26,127,191,0.3)', borderRadius:4 },
+      { label:'Avg', data:boxAvgs.map(b=>parseFloat(b.avg.toFixed(1))), backgroundColor:'rgba(33,150,201,0.8)', borderRadius:4 },
+      { label:'Min', data:boxAvgs.map(b=>b.min), backgroundColor:'rgba(192,57,43,0.3)', borderRadius:4 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{font:{family:'DM Sans',size:11}}}}, scales:{ y:{min:0,max:5,ticks:{font:{family:'DM Sans'}}}, x:{grid:{display:false},ticks:{font:{family:'DM Sans',size:10}}} } }
+  });
+
+  // Consistency chart
+  destroyChart('consistencyChart');
+  const consTasks = [...taskStats].sort((a,b)=>a.consistency-b.consistency);
+  charts.consistencyChart = new Chart(document.getElementById('consistencyChart').getContext('2d'), {
+    type:'bar',
+    data:{ labels:consTasks.map(t=>t.label), datasets:[
+      { label:'Days Done', data:consTasks.map(t=>t.consistency), backgroundColor:consTasks.map(t=>DOMAIN_COLORS[t.domain]+'aa'), borderRadius:5 },
+      { label:'Total Days', data:consTasks.map(t=>t.total), backgroundColor:'rgba(0,0,0,0.05)', borderRadius:5 }
+    ]},
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{font:{family:'DM Sans',size:11}}}}, scales:{ x:{ticks:{font:{family:'DM Sans'}}}, y:{grid:{display:false},ticks:{font:{family:'DM Sans',size:11}}} } }
+  });
+
+  // Weak/Strong lists
+  const bottom5 = taskStats.slice(0,5);
+  const top5 = taskStats.slice().sort((a,b)=>b.pct-a.pct).slice(0,5);
+
+  document.getElementById('weak-list').innerHTML = bottom5.map((t,i) => `
+    <li class="highlight-item">
+      <span class="hi-rank">${i+1}</span>
+      <span class="hi-name">${t.label}</span>
+      <div class="hi-bar-wrap"><div class="hi-bar hi-bar-red" style="width:${t.pct}%"></div></div>
+      <span class="hi-pct">${t.pct}%</span>
+    </li>`).join('');
+
+  document.getElementById('strong-list').innerHTML = top5.map((t,i) => `
+    <li class="highlight-item">
+      <span class="hi-rank">${i+1}</span>
+      <span class="hi-name">${t.label}</span>
+      <div class="hi-bar-wrap"><div class="hi-bar hi-bar-green" style="width:${t.pct}%"></div></div>
+      <span class="hi-pct">${t.pct}%</span>
+    </li>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// TAB 4
+// ═══════════════════════════════════════════════════════════
+function renderTab4() {
+  const all = getAllEntries();
+  const rows = Object.entries(all).sort((a,b)=>a[0].localeCompare(b[0]));
+
+  // Streaks
+  let curStreak=0, bestStreak=0, temp=0;
+  rows.forEach(([date,entry]) => {
+    if (scoreEntry(entry).pct >= 75) { temp++; curStreak=temp; } else temp=0;
+    bestStreak=Math.max(bestStreak,temp);
+  });
+  document.getElementById('streak-cur').textContent=curStreak;
+  document.getElementById('streak-best').textContent=bestStreak;
+
+  // Monthly summary
+  if (rows.length) {
+    const thisMonth = rows.filter(r => r[0].startsWith(new Date().toISOString().slice(0,7)));
+    const pcts = thisMonth.map(r=>scoreEntry(r[1]).pct);
+    const allPcts = rows.map(r=>scoreEntry(r[1]).pct);
+    const best = rows.reduce((b,r) => scoreEntry(r[1]).pct > scoreEntry(b[1]).pct ? r : b);
+    const worst = rows.reduce((b,r) => scoreEntry(r[1]).pct < scoreEntry(b[1]).pct ? r : b);
+    document.getElementById('monthly-summary-content').innerHTML = `
+      <div>🏆 <b>Best Day:</b> ${best[0]} (${scoreEntry(best[1]).pct}%)</div>
+      <div>📉 <b>Worst Day:</b> ${worst[0]} (${scoreEntry(worst[1]).pct}%)</div>
+      <div>📊 <b>Overall Avg:</b> ${Math.round(allPcts.reduce((s,v)=>s+v,0)/allPcts.length)}%</div>
+      <div>📅 <b>This Month:</b> ${thisMonth.length} days tracked</div>
+      <div>⭐ <b>Month Avg:</b> ${pcts.length?Math.round(pcts.reduce((s,v)=>s+v,0)/pcts.length):0}%</div>`;
+  } else {
+    document.getElementById('monthly-summary-content').innerHTML='<span style="color:var(--muted);">No data yet.</span>';
+  }
+
+  if (!rows.length) return;
+
+  // WoW chart
+  const weeksMap = {};
+  rows.forEach(([date, entry]) => {
+    const d = new Date(date+'T00:00:00');
+    const wn = getWeekNumber(d);
+    const key = `W${wn}`;
+    if (!weeksMap[key]) weeksMap[key] = { scores:[], pcts:[] };
+    const { score, pct } = scoreEntry(entry);
+    weeksMap[key].scores.push(score); weeksMap[key].pcts.push(pct);
+  });
+  const wKeys = Object.keys(weeksMap).slice(-8);
+  const wAvgPcts = wKeys.map(k => Math.round(weeksMap[k].pcts.reduce((s,v)=>s+v,0)/weeksMap[k].pcts.length));
+  destroyChart('wowChart');
+  charts.wowChart = new Chart(document.getElementById('wowChart').getContext('2d'), {
+    type:'bar',
+    data:{ labels:wKeys, datasets:[{ label:'Weekly Avg %', data:wAvgPcts, backgroundColor:wAvgPcts.map(p=>p>=90?'rgba(26,127,191,0.8)':p>=75?'rgba(108,200,235,0.8)':p>=60?'rgba(33,150,201,0.8)':'rgba(192,57,43,0.7)'), borderRadius:6 }]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{min:0,max:100,ticks:{callback:v=>v+'%',font:{family:'DM Sans'}}}, x:{grid:{display:false},ticks:{font:{family:'DM Sans'}}} } }
+  });
+
+  // Correlation — task co-occurrence on high score days (pct >= 80)
+  const highDays = rows.filter(r=>scoreEntry(r[1]).pct>=80);
+  if (highDays.length) {
+    const coOccur = TASKS.map(t => ({
+      label: t.label,
+      rate: Math.round(highDays.filter(r=>Number(r[1][t.id]||0)>0).length/highDays.length*100)
+    })).sort((a,b)=>b.rate-a.rate).slice(0,10);
+    destroyChart('corrChart');
+    charts.corrChart = new Chart(document.getElementById('corrChart').getContext('2d'), {
+      type:'bar',
+      data:{ labels:coOccur.map(t=>t.label.substring(0,18)+'…'), datasets:[{ label:'% of high-score days', data:coOccur.map(t=>t.rate), backgroundColor:'rgba(33,150,201,0.8)', borderRadius:5 }]},
+      options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.x+'% of excellent days'}}}, scales:{ x:{min:0,max:100,ticks:{callback:v=>v+'%',font:{family:'DM Sans'}}}, y:{grid:{display:false},ticks:{font:{family:'DM Sans',size:10}}} } }
+    });
+  }
+
+  // Mini domain trends
+  const dateLabels = rows.map(r=>r[0]);
+  DOMAINS.forEach(dom => {
+    const domTasks = TASKS.filter(t=>t.domain===dom);
+    const domMax = domTasks.reduce((s,t)=>s+(t.type==='tick'?1:5),0);
+    const domPcts = rows.map(([,entry]) => {
+      const sc = domTasks.reduce((s,t)=>s+Number(entry[t.id]||0),0);
+      return domMax>0?Math.round(sc/domMax*100):0;
+    });
+    const canvasId = 'mini'+dom;
+    destroyChart(canvasId);
+    charts[canvasId] = new Chart(document.getElementById(canvasId).getContext('2d'), {
+      type:'line',
+      data:{ labels:dateLabels, datasets:[{ data:domPcts, borderColor:DOMAIN_COLORS[dom], backgroundColor:DOMAIN_COLORS[dom]+'22', fill:true, borderWidth:2, pointRadius:2, tension:0.4 }]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{min:0,max:100,ticks:{callback:v=>v+'%',font:{family:'DM Sans',size:10}}}, x:{display:false} } }
+    });
+  });
+
+  // Insight cards
+  const insights = generateInsights(rows);
+  document.getElementById('insight-cards').innerHTML = insights.map(i => `
+    <div class="insight-card ${i.type}">
+      <div class="insight-icon">${i.icon}</div>
+      <div class="insight-text">${i.text}</div>
+    </div>`).join('');
+}
+
+function generateInsights(rows) {
+  const insights = [];
+  if (rows.length < 2) {
+    insights.push({ type:'info', icon:'💡', text:'Keep logging daily to unlock personalized insights about your growth journey.' });
+    return insights;
+  }
+
+  // Check each rating task for drop
+  TASKS.filter(t=>t.type==='rating').forEach(t => {
+    const recent = rows.slice(-3).map(r=>Number(r[1][t.id]||0));
+    if (recent.length===3 && recent[0]>recent[1] && recent[1]>recent[2]) {
+      insights.push({ type:'alert', icon:'📉', text:`<strong>${t.label}</strong> has dropped 3 days in a row. Give it extra attention today.` });
+    }
+  });
+
+  // Streak on tick tasks
+  TASKS.filter(t=>t.type==='tick').forEach(t => {
+    let streak=0;
+    rows.slice().reverse().every(r => { if (r[1][t.id]) { streak++; return true; } return false; });
+    if (streak >= 5) insights.push({ type:'good', icon:'🔥', text:`You've completed <strong>${t.label}</strong> ${streak} days straight — outstanding! Keep it going.` });
+  });
+
+  // Best domain
+  const domPcts = DOMAINS.map(dom => {
+    const domTasks = TASKS.filter(t=>t.domain===dom);
+    const domMax = domTasks.reduce((s,t)=>s+(t.type==='tick'?1:5),0)*rows.length;
+    const domScore = domTasks.reduce((s,t)=>s+rows.reduce((ss,r)=>ss+Number(r[1][t.id]||0),0),0);
+    return { dom, pct:domMax>0?Math.round(domScore/domMax*100):0 };
+  });
+  const best = domPcts.reduce((a,b)=>a.pct>b.pct?a:b);
+  const weak = domPcts.reduce((a,b)=>a.pct<b.pct?a:b);
+  insights.push({ type:'good', icon:'🌟', text:`Your strongest domain is <strong>${best.dom}</strong> at ${best.pct}%. Your efforts there are showing!` });
+  insights.push({ type:'warn', icon:'⚡', text:`<strong>${weak.dom}</strong> needs attention (${weak.pct}%). Even small improvements here compound over time.` });
+
+  // WoW trend
+  if (rows.length >= 14) {
+    const thisWk = rows.slice(-7).map(r=>scoreEntry(r[1]).pct);
+    const prevWk = rows.slice(-14,-7).map(r=>scoreEntry(r[1]).pct);
+    const tw = thisWk.reduce((s,v)=>s+v,0)/thisWk.length;
+    const pw = prevWk.reduce((s,v)=>s+v,0)/prevWk.length;
+    if (tw > pw) insights.push({ type:'good', icon:'📈', text:`This week's average (${Math.round(tw)}%) is higher than last week (${Math.round(pw)}%). You're improving!` });
+    else insights.push({ type:'warn', icon:'📊', text:`This week's average (${Math.round(tw)}%) is lower than last week (${Math.round(pw)}%). Reflect and refocus.` });
+  }
+
+  // Friday reminder
+  const today = new Date();
+  if (today.getDay()===5) insights.push({ type:'info', icon:'🕌', text:'Today is <strong>Jumu\'ah</strong> — blessed Friday! Set extra intentions for prayers and remembrance of Allah.' });
+
+  // Subh reminder if fajr mosque is low
+  const fajrMosqueVals = rows.map(r=>Number(r[1]['fajr_mosque']||0));
+  const fajrRate = fajrMosqueVals.filter(v=>v>0).length/fajrMosqueVals.length;
+  if (fajrRate < 0.3) insights.push({ type:'alert', icon:'🌅', text:'Fajr at Mosque consistency is below 30%. Rising early for congregation brings tremendous barakah.' });
+
+  return insights.slice(0, 8);
+}
+
+// ═══════════════════════════════════════════════════════════
+// EXPORT CSV
+// ═══════════════════════════════════════════════════════════
+function exportCSV() {
+  const all = getAllEntries();
+  const rows = Object.entries(all).sort((a,b)=>a[0].localeCompare(b[0]));
+  if (!rows.length) { showToast('No data to export!'); return; }
+  const headers = ['Date', ...TASKS.map(t=>t.label), 'Total Score', 'Max Score', 'Completion %', 'Grade', "Today's Mission", "Today's Summary", 'Commitment/Reminder'];
+  const csvRows = rows.map(([date, entry]) => {
+    const { score, max, pct } = scoreEntry(entry);
+    const taskVals = TASKS.map(t => entry[t.id]??0);
+    const comments = JSON.parse(localStorage.getItem(getCommentsKey(date)) || '{}');
+    const summary    = '"' + (comments.summary    || '').replace(/"/g,'""') + '"';
+    const commitment = '"' + (comments.commitment || '').replace(/"/g,'""') + '"';
+    const mission    = '"' + (comments.mission    || '').replace(/"/g,'""') + '"';
+    return [date, ...taskVals, score, max, pct+'%', getGrade(pct), mission, summary, commitment].join(',');
+  });
+  const csv = [headers.join(','), ...csvRows].join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='mizan_data.csv'; a.click();
+  URL.revokeObjectURL(url);
+  showToast('✅ CSV exported!');
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// COMPARISON LOGIC
+// ═══════════════════════════════════════════════════════════
+let compareDaysAgo = 1;
+
+function setCompareDay(n) {
+  compareDaysAgo = n;
+  // update chips
+  [1,3,7,14].forEach(v => {
+    const c = document.getElementById('chip-'+v);
+    if (c) c.classList.toggle('active', v===n);
+  });
+  renderComparison();
+}
+
+function renderComparison() {
+  const curDate = document.getElementById('entry-date').value || todayStr();
+  const curEntry = getEntry(curDate);
+  const curHasData = Object.keys(curEntry).length > 0;
+
+  // calc prev date
+  const pd = new Date(curDate + 'T00:00:00');
+  pd.setDate(pd.getDate() - compareDaysAgo);
+  const prevDate = pd.toISOString().slice(0,10);
+  const prevEntry = getEntry(prevDate);
+  const prevHasData = Object.keys(prevEntry).length > 0;
+
+  const labelMap = {1:'Yesterday',3:'3 Days Ago',7:'7 Days Ago',14:'14 Days Ago'};
+  document.getElementById('prev-card-label').textContent = labelMap[compareDaysAgo] + ' (' + prevDate + ')';
+
+  // Current card
+  if (curHasData) {
+    const { score, max, pct } = scoreEntry(curEntry);
+    const grade = getGrade(pct);
+    document.getElementById('cur-score-cmp').textContent = score;
+    document.getElementById('cur-max-cmp').textContent = 'out of ' + max + ' points';
+    document.getElementById('cur-pct-cmp').textContent = pct + '%';
+    document.getElementById('cur-grade-cmp').textContent = gradeEmoji(grade) + ' ' + grade;
+  } else {
+    document.getElementById('cur-score-cmp').textContent = '—';
+    document.getElementById('cur-max-cmp').textContent = 'No entry saved yet';
+    document.getElementById('cur-pct-cmp').textContent = '';
+    document.getElementById('cur-grade-cmp').textContent = '';
+  }
+
+  // Prev card
+  if (prevHasData) {
+    const { score, max, pct } = scoreEntry(prevEntry);
+    const grade = getGrade(pct);
+    document.getElementById('prev-score').textContent = score;
+    document.getElementById('prev-max').textContent = 'out of ' + max + ' points';
+    document.getElementById('prev-pct').textContent = pct + '%';
+    document.getElementById('prev-grade').textContent = gradeEmoji(grade) + ' ' + grade;
+  } else {
+    document.getElementById('prev-score').textContent = '—';
+    document.getElementById('prev-max').textContent = 'No data for this day';
+    document.getElementById('prev-pct').textContent = '';
+    document.getElementById('prev-grade').textContent = '';
+  }
+
+  // Delta badge
+  const badge = document.getElementById('delta-badge');
+  const msg   = document.getElementById('delta-msg');
+  if (curHasData && prevHasData) {
+    const cur  = scoreEntry(curEntry);
+    const prev = scoreEntry(prevEntry);
+    const diff = cur.score - prev.score;
+    const pctDiff = cur.pct - prev.pct;
+    if (diff > 0) {
+      badge.className = 'delta-badge delta-up';
+      badge.textContent = '▲ +' + diff + ' pts  (' + (pctDiff>=0?'+':'') + pctDiff + '%)';
+      msg.textContent = 'MashaAllah! You scored higher than ' + labelMap[compareDaysAgo].toLowerCase() + '. Keep going! 🌟';
+    } else if (diff < 0) {
+      badge.className = 'delta-badge delta-down';
+      badge.textContent = '▼ ' + diff + ' pts  (' + pctDiff + '%)';
+      msg.textContent = 'You scored lower than ' + labelMap[compareDaysAgo].toLowerCase() + '. Reflect and refocus — every day is a new chance. 💪';
+    } else {
+      badge.className = 'delta-badge delta-same';
+      badge.textContent = '= Same score as ' + labelMap[compareDaysAgo].toLowerCase();
+      msg.textContent = 'Consistent performance! Try to push a little higher today. 🎯';
+    }
+  } else {
+    badge.className = 'delta-badge delta-same';
+    badge.textContent = '— Not enough data to compare';
+    msg.textContent = '';
+  }
+
+  // Domain comparison bars
+  renderDomainBars(curEntry, prevEntry, curHasData, prevHasData, labelMap[compareDaysAgo]);
+  // Per-task delta badges
+  updateTaskDeltas(prevEntry, prevHasData);
+}
+
+function gradeEmoji(grade) {
+  return { Excellent:'🟢', Good:'🔵', Average:'🟡', 'Needs Improvement':'🔴' }[grade] || '🔴';
+}
+
+function renderDomainBars(curEntry, prevEntry, curHasData, prevHasData, prevLabel) {
+  const container = document.getElementById('compare-domain-bars');
+  const domColors = { Spiritual:'#1a7fbf', Physical:'#c47d0e', Character:'#2980b9', Skills:'#8e44ad' };
+
+  let html = '<div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">Domain Breakdown</div>';
+
+  DOMAINS.forEach(dom => {
+    const tasks = TASKS.filter(t => t.domain === dom);
+    const domMax = tasks.reduce((s,t) => s + (t.type==='tick'?1:5), 0);
+    const curSc  = curHasData  ? tasks.reduce((s,t)=>s+Number(curEntry[t.id]||0),0)  : null;
+    const prevSc = prevHasData ? tasks.reduce((s,t)=>s+Number(prevEntry[t.id]||0),0) : null;
+    const curPct  = curSc  !== null ? Math.round(curSc/domMax*100)  : null;
+    const prevPct = prevSc !== null ? Math.round(prevSc/domMax*100) : null;
+    const color = domColors[dom];
+
+    html += `<div class="compare-domain-row">
+      <div class="compare-domain-label">${dom}</div>
+      <div class="compare-bar-group">
+        <div class="compare-bar-row">
+          <div class="compare-bar-lbl" style="color:var(--green);font-weight:700;">Now</div>
+          <div class="compare-bar-track"><div class="compare-bar-fill" style="width:${curPct??0}%;background:${color};opacity:0.9;"></div></div>
+          <div class="compare-bar-val">${curPct!==null?curPct+'%':'—'}</div>
+        </div>
+        <div class="compare-bar-row">
+          <div class="compare-bar-lbl">${prevLabel.split(' ')[0]}</div>
+          <div class="compare-bar-track"><div class="compare-bar-fill" style="width:${prevPct??0}%;background:${color};opacity:0.35;"></div></div>
+          <div class="compare-bar-val">${prevPct!==null?prevPct+'%':'—'}</div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+// ── Update per-task delta badges in all rows ──
+function updateTaskDeltas(prevEntry, prevHasData) {
+  TASKS.forEach(t => {
+    const el = document.getElementById('delta-'+t.id);
+    if (!el) return;
+    if (!prevHasData) { el.style.display='none'; return; }
+    const prevVal = Number(prevEntry[t.id] || 0);
+    let curVal;
+    if (t.type==='tick') {
+      curVal = document.getElementById('toggle-'+t.id)?.classList.contains('on') ? 1 : 0;
+    } else {
+      curVal = parseInt(document.getElementById('slider-'+t.id)?.value || 0);
+    }
+    const diff = curVal - prevVal;
+    el.style.display = 'inline-block';
+    if (diff > 0) { el.className='task-delta tdelta-up'; el.textContent='▲+'+ diff; }
+    else if (diff < 0) { el.className='task-delta tdelta-down'; el.textContent='▼'+ diff; }
+    else { el.className='task-delta tdelta-same'; el.textContent='='+curVal; }
+  });
+}
+
+// ── Per-task delta in task rows ──
+function getTaskDeltaHTML(taskId, taskType, curVal) {
+  const curDate = document.getElementById('entry-date').value || todayStr();
+  const pd = new Date(curDate + 'T00:00:00');
+  pd.setDate(pd.getDate() - compareDaysAgo);
+  const prevDate = pd.toISOString().slice(0,10);
+  const prevEntry = getEntry(prevDate);
+  if (!Object.keys(prevEntry).length) return '<span class="task-delta tdelta-new">NEW</span>';
+  const prevVal = Number(prevEntry[taskId] || 0);
+  const cur = Number(curVal || 0);
+  const diff = cur - prevVal;
+  if (diff > 0) return `<span class="task-delta tdelta-up">▲+${diff}</span>`;
+  if (diff < 0) return `<span class="task-delta tdelta-down">▼${diff}</span>`;
+  return `<span class="task-delta tdelta-same">=${cur}</span>`;
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// COMMENTS — Today's Summary & Commitment/Reminder
+// ═══════════════════════════════════════════════════════════
+let commentAutoSaveTimers = {};
+
+function getCommentsKey(date) {
+  return 'mizan_comments_' + date;
+}
+
+function loadComments(date) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(getCommentsKey(date)) || '{}');
+    const summaryEl     = document.getElementById('comment-summary');
+    const commitmentEl  = document.getElementById('comment-commitment');
+    const missionEl     = document.getElementById('comment-mission');
+    if (summaryEl)    summaryEl.value    = saved.summary    || '';
+    if (commitmentEl) commitmentEl.value = saved.commitment || '';
+    if (missionEl)    missionEl.value    = saved.mission    || '';
+    updateCharCount('summary');
+    updateCharCount('commitment');
+    updateCharCount('mission');
+  } catch(e) {}
+}
+
+function saveComments(date) {
+  try {
+    const summary    = document.getElementById('comment-summary')?.value    || '';
+    const commitment = document.getElementById('comment-commitment')?.value || '';
+    const mission    = document.getElementById('comment-mission')?.value    || '';
+    const data = { summary, commitment, mission };
+    localStorage.setItem(getCommentsKey(date), JSON.stringify(data));
+    cloudSyncComments(date, data);
+  } catch(e) {}
+}
+
+function autoSaveComment(type) {
+  clearTimeout(commentAutoSaveTimers[type]);
+  commentAutoSaveTimers[type] = setTimeout(() => {
+    const date = document.getElementById('entry-date').value || todayStr();
+    saveComments(date);
+    const badge = document.getElementById('saved-' + type);
+    if (badge) {
+      badge.classList.add('show');
+      setTimeout(() => badge.classList.remove('show'), 1800);
+    }
+  }, 600);
+}
+
+function updateCharCount(type) {
+  const el  = document.getElementById('comment-' + type);
+  const cnt = document.getElementById('char-' + type);
+  if (el && cnt) cnt.textContent = el.value.length + ' characters';
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// WEIGHT TRACKER
+// ═══════════════════════════════════════════════════════════
+const WEIGHT_KEY_PREFIX = 'mizan_weight_';
+const WEIGHT_BONUS_MAX = 3; // max bonus/penalty points added to score
+
+function getWeightKey(date) { return WEIGHT_KEY_PREFIX + date; }
+
+function getWeightEntry(date) {
+  try { return JSON.parse(localStorage.getItem(getWeightKey(date)) || 'null'); } catch { return null; }
+}
+
+function setWeightEntry(date, value, unit) {
+  const data = { value, unit, date };
+  localStorage.setItem(getWeightKey(date), JSON.stringify(data));
+  cloudSyncWeight(date, data);
+}
+
+function findPreviousWeightEntry(beforeDate) {
+  const prefix = WEIGHT_KEY_PREFIX;
+  const dates = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith(prefix)) {
+      const d = key.slice(prefix.length);
+      if (d < beforeDate) dates.push(d);
+    }
+  }
+  if (!dates.length) return null;
+  dates.sort();
+  const lastDate = dates[dates.length - 1];
+  const entry = getWeightEntry(lastDate);
+  return entry ? { ...entry, date: lastDate } : null;
+}
+
+function loadWeightUI(date) {
+  const cur = getWeightEntry(date);
+  const prev = findPreviousWeightEntry(date);
+
+  // Populate previous card
+  if (prev) {
+    document.getElementById('weight-prev-val').textContent = prev.value;
+    document.getElementById('weight-prev-unit').textContent = prev.unit;
+    document.getElementById('weight-prev-date').textContent = prev.date;
+  } else {
+    document.getElementById('weight-prev-val').textContent = '—';
+    document.getElementById('weight-prev-unit').textContent = 'kg';
+    document.getElementById('weight-prev-date').textContent = 'No previous record yet';
+  }
+
+  // Populate current input
+  const input = document.getElementById('weight-input');
+  const unitSel = document.getElementById('weight-unit');
+  if (cur) {
+    input.value = cur.value;
+    unitSel.value = cur.unit;
+  } else {
+    input.value = '';
+    unitSel.value = prev ? prev.unit : 'kg';
+  }
+
+  renderWeightComparison(date);
+}
+
+function convertToKg(value, unit) {
+  return unit === 'lb' ? value * 0.453592 : value;
+}
+
+function renderWeightComparison(date) {
+  const input = document.getElementById('weight-input');
+  const unitSel = document.getElementById('weight-unit');
+  const resultWrap = document.getElementById('weight-result-wrap');
+  const badge = document.getElementById('weight-delta-badge');
+  const msg = document.getElementById('weight-points-msg');
+
+  const valStr = input.value;
+  const prev = findPreviousWeightEntry(date);
+
+  if (!valStr || isNaN(parseFloat(valStr))) {
+    resultWrap.style.display = 'none';
+    updateLiveScore();
+    return;
+  }
+
+  const curVal = parseFloat(valStr);
+  const curUnit = unitSel.value;
+
+  if (!prev) {
+    resultWrap.style.display = 'block';
+    badge.className = 'weight-delta-badge wdelta-same';
+    badge.textContent = '— First weight entry recorded';
+    msg.textContent = 'No previous weight to compare yet. This becomes your baseline.';
+    updateLiveScore();
+    return;
+  }
+
+  const curKg = convertToKg(curVal, curUnit);
+  const prevKg = convertToKg(prev.value, prev.unit);
+  const diffKg = curKg - prevKg;
+
+  resultWrap.style.display = 'block';
+
+  if (diffKg < -0.001) {
+    const lost = Math.abs(diffKg).toFixed(2);
+    badge.className = 'weight-delta-badge wdelta-down';
+    badge.textContent = '▼ -' + lost + ' kg lost';
+    const bonus = computeWeightBonus(diffKg);
+    msg.innerHTML = 'MashaAllah! You lost weight compared to last record. <b>+' + bonus + ' bonus points</b> added to today\'s score. 🎉';
+  } else if (diffKg > 0.001) {
+    const gained = diffKg.toFixed(2);
+    badge.className = 'weight-delta-badge wdelta-up';
+    badge.textContent = '▲ +' + gained + ' kg gained';
+    const penalty = computeWeightBonus(diffKg);
+    msg.innerHTML = 'Weight increased compared to last record. <b>' + penalty + ' points</b> deducted from today\'s score. Stay consistent! 💪';
+  } else {
+    badge.className = 'weight-delta-badge wdelta-same';
+    badge.textContent = '= No change';
+    msg.textContent = 'Your weight is the same as last record. Keep up the consistency!';
+  }
+
+  updateLiveScore();
+}
+
+// Bonus/penalty scales with magnitude of change, capped at WEIGHT_BONUS_MAX
+function computeWeightBonus(diffKg) {
+  const absDiff = Math.abs(diffKg);
+  // 0.1kg = 1 point, capped at WEIGHT_BONUS_MAX
+  const pts = Math.min(WEIGHT_BONUS_MAX, Math.round(absDiff * 10));
+  return Math.max(1, pts);
+}
+
+function getWeightScoreAdjustment(date) {
+  const input = document.getElementById('weight-input');
+  const unitSel = document.getElementById('weight-unit');
+  if (!input || !input.value || isNaN(parseFloat(input.value))) return 0;
+
+  const prev = findPreviousWeightEntry(date);
+  if (!prev) return 0;
+
+  const curKg = convertToKg(parseFloat(input.value), unitSel.value);
+  const prevKg = convertToKg(prev.value, prev.unit);
+  const diffKg = curKg - prevKg;
+
+  if (Math.abs(diffKg) < 0.001) return 0;
+  const pts = computeWeightBonus(diffKg);
+  return diffKg < 0 ? pts : -pts;
+}
+
+function onWeightInput() {
+  const date = document.getElementById('entry-date').value || todayStr();
+  const input = document.getElementById('weight-input');
+  const unitSel = document.getElementById('weight-unit');
+  if (input.value && !isNaN(parseFloat(input.value))) {
+    setWeightEntry(date, parseFloat(input.value), unitSel.value);
+  }
+  renderWeightComparison(date);
+}
+
+async function clearAllWeightHistory() {
+  if (!confirm('This will permanently delete ALL previously recorded weight entries (local + cloud) so you can start fresh from today. Continue?')) return;
+
+  // Clear local cache
+  const prefix = WEIGHT_KEY_PREFIX;
+  const keysToRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith(prefix)) keysToRemove.push(key);
+  }
+  keysToRemove.forEach(k => localStorage.removeItem(k));
+
+  // Clear cloud
+  if (db && userDocId) {
+    try {
+      setSyncStatus('syncing', 'Clearing weight history…');
+      const snap = await db.collection('users').doc(userDocId).collection('weights').get();
+      const batch = db.batch();
+      snap.forEach(doc => batch.delete(doc.ref));
+      await batch.commit();
+      setSyncStatus('synced', 'Synced');
+    } catch (e) {
+      console.error('Failed to clear cloud weight history', e);
+      setSyncStatus('error', 'Cloud clear failed (local cleared)');
+    }
+  }
+
+  // Refresh UI for current date
+  const date = document.getElementById('entry-date').value || todayStr();
+  document.getElementById('weight-input').value = '';
+  loadWeightUI(date);
+  showToast('✅ Weight history cleared — starting fresh!');
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+function initAppUI() {
+  buildTaskForms();
+  const today = todayStr();
+  document.getElementById('entry-date').value = today;
+  // Date filter defaults
+  const thirtyAgo = new Date(); thirtyAgo.setDate(thirtyAgo.getDate()-30);
+  document.getElementById('f2-from').value = thirtyAgo.toISOString().slice(0,10);
+  document.getElementById('f2-to').value = today;
+  loadEntry(today);
+  updateLiveScore();
+  loadComments(today);
+  document.getElementById('entry-date').addEventListener('change', e => loadEntry(e.target.value));
+  renderComparison();
+}
+
+// ── Bootstrap: try Firebase, try saved PIN, else show lock screen ──
+function bootstrap() {
+  const fbOk = initFirebase();
+  if (!fbOk) {
+    setSyncStatus('error', 'Cloud unavailable — local only');
+  }
+  const savedDocId = localStorage.getItem('mizan_pin_docid');
+  if (savedDocId) {
+    userDocId = savedDocId;
+    document.getElementById('pin-lock-overlay').style.display = 'none';
+    loadFromCloudThenInit();
+  } else {
+    setSyncStatus('error', 'Enter PIN to sync');
+    document.getElementById('pin-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkPin();
+    });
+  }
+}
+
+bootstrap();
+</script>
+</body>
+</html>
